@@ -9,6 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using XNA_GameEngine.Gameplay;
+using XNA_GameEngine.Physics;
+using XNA_GameEngine.Network;
+
 namespace XNA_GameEngine
 {
     /// <summary>
@@ -27,13 +31,15 @@ namespace XNA_GameEngine
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// This will include the various singleton managers for the different modules and for
+        /// the worlds that the game objects and components will live in.
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Initialize the singleton component managers and worlds.
+            NetworkManager.GetInstance().Initialize("localhost", 8888);
+            PhysicsWorld.GetInstance().Initialize();
+            GameplayWorld.GetInstance().Initialize();
 
             base.Initialize();
         }
@@ -70,7 +76,12 @@ namespace XNA_GameEngine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+            //  Update all of the core modules
+            GameplayWorld.GetInstance().Update();
+            NetworkManager.GetInstance().Update();
+            PhysicsWorld.GetInstance().Update();
+
+
 
             base.Update(gameTime);
         }
