@@ -32,12 +32,10 @@ namespace XNA_GameEngine.Network
         {
             if(g_NetworkManager == null)
             {
-                return g_NetworkManager;
+                g_NetworkManager = new NetworkManager();
             }
-            else
-            {
-                return g_NetworkManager;
-            }
+            
+            return g_NetworkManager;
         }
 
 #if Server

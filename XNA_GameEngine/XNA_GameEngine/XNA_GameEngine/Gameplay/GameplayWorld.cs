@@ -24,12 +24,10 @@ namespace XNA_GameEngine.Gameplay
         {
             if (g_GameplayWorld == null)
             {
-                return new GameplayWorld();
+                g_GameplayWorld = new GameplayWorld();
             }
-            else
-            {
-                return g_GameplayWorld;
-            }
+            
+            return g_GameplayWorld;
         }
 
         public void Update()

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using XNA_GameEngine.Gameplay;
 using XNA_GameEngine.Physics;
 using XNA_GameEngine.Network;
+using XNA_GameEngine.Rendering;
 
 namespace XNA_GameEngine
 {
@@ -40,6 +41,7 @@ namespace XNA_GameEngine
             NetworkManager.GetInstance().Initialize("localhost", 8888);
             PhysicsWorld.GetInstance().Initialize();
             GameplayWorld.GetInstance().Initialize();
+            Renderer.GetInstance().Initialize(this);
 
             base.Initialize();
         }
@@ -66,6 +68,7 @@ namespace XNA_GameEngine
         }
 
         /// <summary>
+        /// Game Loop
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
@@ -81,20 +84,17 @@ namespace XNA_GameEngine
             NetworkManager.GetInstance().Update();
             PhysicsWorld.GetInstance().Update();
 
-
-
             base.Update(gameTime);
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// This is where rendering related calls are fired off.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            // Have render perform rendering.
+            Renderer.GetInstance().Render(gameTime);
 
             base.Draw(gameTime);
         }

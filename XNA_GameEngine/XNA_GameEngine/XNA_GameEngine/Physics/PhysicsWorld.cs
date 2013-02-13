@@ -25,12 +25,10 @@ namespace XNA_GameEngine.Physics
         {
             if (g_PhysicsWorld == null)
             {
-                return new PhysicsWorld();
+                g_PhysicsWorld = new PhysicsWorld();
             }
-            else
-            {
-                return g_PhysicsWorld;
-            }
+        
+            return g_PhysicsWorld;
         }
 
         public void Update()
