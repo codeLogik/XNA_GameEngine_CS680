@@ -13,6 +13,7 @@ using XNA_GameEngine.Gameplay;
 using XNA_GameEngine.Physics;
 using XNA_GameEngine.Network;
 using XNA_GameEngine.Rendering;
+using XNA_GameEngine.Sound;
 
 namespace XNA_GameEngine
 {
@@ -42,6 +43,7 @@ namespace XNA_GameEngine
             PhysicsWorld.GetInstance().Initialize();
             GameplayWorld.GetInstance().Initialize();
             Renderer.GetInstance().Initialize(this);
+            SoundManager.GetInstance().Initialize();
 
             base.Initialize();
         }
@@ -83,6 +85,7 @@ namespace XNA_GameEngine
             GameplayWorld.GetInstance().Update();
             NetworkManager.GetInstance().Update();
             PhysicsWorld.GetInstance().Update();
+            SoundManager.GetInstance().Update();
 
             base.Update(gameTime);
         }

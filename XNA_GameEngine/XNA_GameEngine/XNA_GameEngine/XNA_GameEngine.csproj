@@ -118,6 +118,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="CoreMain.cs" />
     <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Sound\SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
