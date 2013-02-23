@@ -110,6 +110,7 @@
     <Compile Include="Core\CoreComponent.cs" />
     <Compile Include="Gameplay\GameObject.cs" />
     <Compile Include="Gameplay\GameplayWorld.cs" />
+    <Compile Include="Network\NetworkDataTypes\NVec2.cs" />
     <Compile Include="Network\NetworkManager.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="CoreMain.cs" />
     <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\RenderObject.cs" />
     <Compile Include="Sound\SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
