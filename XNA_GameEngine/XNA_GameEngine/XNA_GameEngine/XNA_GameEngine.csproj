@@ -110,8 +110,17 @@
     <Compile Include="Core\CoreComponent.cs" />
     <Compile Include="Gameplay\GameObject.cs" />
     <Compile Include="Gameplay\GameplayWorld.cs" />
+    <Compile Include="Network\InputState.cs" />
+    <Compile Include="Network\LocalInput.cs" />
+    <Compile Include="Network\NetGameState.cs" />
+    <Compile Include="Network\NetGOState.cs" />
+    <Compile Include="Network\NetSynchronizedInput.cs" />
+    <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\NetworkDataTypes\NVec2.cs" />
     <Compile Include="Network\NetworkManager.cs" />
+    <Compile Include="Network\NetworkObject.cs" />
+    <Compile Include="Network\NetworkServer.cs" />
+    <Compile Include="Network\NFSM.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />
     <Compile Include="Physics\PhysicsWorld.cs" />

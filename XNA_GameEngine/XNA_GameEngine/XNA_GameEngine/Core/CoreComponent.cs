@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.Xna.Framework;
+
 using XNA_GameEngine.Gameplay;
 
 namespace XNA_GameEngine.Core
@@ -21,7 +23,7 @@ namespace XNA_GameEngine.Core
         protected GameObject m_ownerGO;
         protected ComponentType m_Type;
 
-        public ICoreComponent(GameObject ownerGO)
+        public ICoreComponent(ref GameObject ownerGO)
         {
             m_ownerGO = ownerGO;
         }
@@ -31,6 +33,11 @@ namespace XNA_GameEngine.Core
             return m_Type;
         }
 
-        public void Update();
+        public GameObject GetParent()
+        {
+            return m_ownerGO;
+        }
+
+        public abstract void Update(GameTime gameTime);
     }
 }

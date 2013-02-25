@@ -76,5 +76,20 @@ namespace XNA_GameEngine.Network.NetworkDataTypes
 
             return lhs.Equals(rhs);
         }
+
+        public static bool operator !=(NVec2 lhs, NVec2 rhs)
+        {
+            if (ReferenceEquals(lhs, null))
+            {
+                return !ReferenceEquals(rhs, null);
+            }
+
+            if (ReferenceEquals(rhs, null))
+            {
+                return !ReferenceEquals(lhs, null);
+            }
+
+            return !lhs.Equals(rhs);
+        }
     }
 }

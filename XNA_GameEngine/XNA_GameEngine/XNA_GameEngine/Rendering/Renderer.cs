@@ -13,6 +13,10 @@ namespace XNA_GameEngine.Rendering
         private static Renderer g_Renderer;
         private Color m_backgroundColor;
         private CoreMain m_mainGame;
+        private SpriteBatch m_spriteBatch;
+        private GraphicsDevice m_graphicsDevice;
+
+        private LinkedList<RenderObject> m_renderObjects;
 
         public Renderer()
         {
@@ -20,9 +24,12 @@ namespace XNA_GameEngine.Rendering
             m_backgroundColor = Color.Black;
         }
 
-        public void Initialize(CoreMain mainGame)
+        public void Initialize(CoreMain mainGame, GraphicsDevice graphicsDevice)
         {
             m_mainGame = mainGame;
+            m_graphicsDevice = graphicsDevice;
+            m_spriteBatch = new SpriteBatch(m_graphicsDevice);
+            m_renderObjects = new LinkedList<RenderObject>();
         }
 
         public static Renderer GetInstance()
@@ -35,10 +42,25 @@ namespace XNA_GameEngine.Rendering
             return g_Renderer;
         }
 
-        public void Render(GameTime gameTime)
+        public void AddRenderObject(ref RenderObject renderObject)
+        {
+            if (renderObject != null)
+            {
+                m_renderObjects.AddLast(renderObject);
+            }
+        }
+
+        public void Render()
         {
             // Iterate through all of the render objects queued to be rendered.
             m_mainGame.GraphicsDevice.Clear(m_backgroundColor);
+
+            m_spriteBatch.Begin();
+            foreach (RenderObject renderObject in m_renderObjects)
+            {
+                renderObject.Render(ref m_spriteBatch);
+            }
+            m_spriteBatch.End();
         }
     }
 }

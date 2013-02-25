@@ -22,12 +22,17 @@ namespace XNA_GameEngine
     /// </summary>
     public class CoreMain : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        GraphicsDeviceManager m_graphics;
+        SpriteBatch m_spriteBatch;
+
+        static public const int MAX_PLAYERS = 4;
+        static public int s_localPlayer = 0;
+        static public bool isServer = false;
 
         public CoreMain()
         {
-            graphics = new GraphicsDeviceManager(this);
+            m_graphics = new GraphicsDeviceManager(this);
+            m_spriteBatch = new SpriteBatch(GraphicsDevice);
             Content.RootDirectory = "Content";
         }
 
@@ -42,7 +47,7 @@ namespace XNA_GameEngine
             NetworkManager.GetInstance().Initialize("localhost", 8888);
             PhysicsWorld.GetInstance().Initialize();
             GameplayWorld.GetInstance().Initialize();
-            Renderer.GetInstance().Initialize(this);
+            Renderer.GetInstance().Initialize(this, GraphicsDevice);
             SoundManager.GetInstance().Initialize();
 
             base.Initialize();
@@ -55,7 +60,7 @@ namespace XNA_GameEngine
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -97,7 +102,7 @@ namespace XNA_GameEngine
         protected override void Draw(GameTime gameTime)
         {
             // Have render perform rendering.
-            Renderer.GetInstance().Render(gameTime);
+            Renderer.GetInstance().Render();
 
             base.Draw(gameTime);
         }

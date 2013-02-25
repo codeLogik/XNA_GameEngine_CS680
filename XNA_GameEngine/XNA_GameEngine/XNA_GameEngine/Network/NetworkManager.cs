@@ -10,7 +10,7 @@ namespace XNA_GameEngine.Network
     {
         private String m_serverURL;
         private int m_port;
-        private LinkedList<ICoreComponent> m_GONetComponents;
+        private Dictionary<Guid, NetworkObject> m_GONetComponents;
 
         static NetworkManager g_NetworkManager;
 
@@ -18,7 +18,7 @@ namespace XNA_GameEngine.Network
         {
             m_serverURL = null;
             m_port = 0;
-            m_GONetComponents = new LinkedList<ICoreComponent>();
+            m_GONetComponents = new Dictionary<Guid, NetworkObject>();
             g_NetworkManager = null;
         }
 
@@ -38,17 +38,33 @@ namespace XNA_GameEngine.Network
             return g_NetworkManager;
         }
 
-#if Server
-        void ReceivePacket()
+        public void AddNetworkObject(ref NetworkObject networkObject)
         {
-            // Receive buffer and process
+            if (networkObject != null)
+            {
+                m_GONetComponents[networkObject.GetParent().GetRef()] = networkObject;
+            }
         }
-#else
-        private void SendPacket(String buffer)
+
+        public void StartServerLobby()
         {
-            // Send the data off to the server
+            // Starts the thread for listening on requests to join lobby or observe game.
         }
-#endif
+
+        public void RequestJoinSession(/*IP Address*/)
+        {
+            // Query the server at the IP address to join the session.
+        }
+
+        public void StartServer()
+        {
+            // Initialize and start the server thread as well as the lobby thread.
+        }
+
+        public void StartClient()
+        {
+
+        }
 
         public void Update()
         {

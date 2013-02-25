@@ -10,9 +10,11 @@ namespace XNA_GameEngine.Gameplay
 {
     abstract class GameObject
     {
-        private Vector3 m_position;
-        private float m_rotation;
+        private Vector3 m_vPosition;
+        private float m_fRotation;
+        private float m_fScale;
         private ICoreComponent [] m_GOComponents;
+        Guid m_GORef;
 
         public GameObject()
         {
@@ -45,9 +47,34 @@ namespace XNA_GameEngine.Gameplay
                 m_GOComponents[componentType] = null;
             }
         }
-          
 
-        public void Update()
+
+        public Vector3 GetPosition()
+        {
+            return m_vPosition;
+        }
+
+        public void SetPosition(Vector3 position)
+        {
+            m_vPosition = position;
+        }
+
+        public float GetScale()
+        {
+            return m_fScale;
+        }
+
+        public void SetScale(float scale)
+        {
+            m_fScale = scale;
+        }
+
+        public Guid GetRef()
+        {
+            return m_GORef;
+        }
+
+        public virtual void Update(GameTime gameTime)
         {
 
         }

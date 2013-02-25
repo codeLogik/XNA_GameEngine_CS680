@@ -16,8 +16,8 @@ namespace XNA_GameEngine.Physics
         private float m_fMass;
         private ICollider m_collision;
 
-        public PhysicsObject(GameObject parentGO)
-            : base(parentGO)
+        public PhysicsObject(ref GameObject parentGO)
+            : base(ref parentGO)
         {
             m_Type = ComponentType.COMPONENT_Physics;
             m_ownerGO = parentGO;
@@ -28,5 +28,10 @@ namespace XNA_GameEngine.Physics
 
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            // TODO @matt: Handle the simulation tick stuff from through here.  This is called once per frame from within 
+            // the main game loop.
+        }
     }
 }
