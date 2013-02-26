@@ -79,7 +79,14 @@ namespace XNA_GameEngine.Gameplay
 
         public virtual void Update(GameTime gameTime)
         {
-
+            // Run update on all of the components
+            foreach (ICoreComponent coreComponent in m_GOComponents)
+            {
+                if (coreComponent != null)
+                {
+                    coreComponent.Update(gameTime);
+                }
+            }
         }
 
         public virtual void Render()

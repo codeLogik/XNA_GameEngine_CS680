@@ -44,19 +44,19 @@ namespace XNA_GameEngine.Debug
             NetSynchronizedInput synchronizedInput = NetworkManager.GetInstance().GetNetSynchronizedInput();
             if(synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Up))
             {
-                m_vPosition.Y -= m_fSpeed * gameTime.ElapsedGameTime.Seconds;
+                m_vPosition.Y -= m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Down))
             {
-                m_vPosition.Y += m_fSpeed * gameTime.ElapsedGameTime.Seconds;
+                m_vPosition.Y += m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Right))
             {
-                m_vPosition.X += m_fSpeed * gameTime.ElapsedGameTime.Seconds;
+                m_vPosition.X += m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Left))
             {
-                m_vPosition.X -= m_fSpeed * gameTime.ElapsedGameTime.Seconds;
+                m_vPosition.X -= m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
     }

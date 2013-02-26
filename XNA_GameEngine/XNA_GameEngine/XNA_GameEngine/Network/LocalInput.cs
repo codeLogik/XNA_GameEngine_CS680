@@ -30,6 +30,15 @@ namespace XNA_GameEngine.Network
             m_keyboardState = Keyboard.GetState();
 
             // TODO @tom: Build local input state
+            m_localInputState.m_inputState = 0;
+            if (m_keyboardState.IsKeyDown(Keys.Down))
+                m_localInputState.m_inputState |= (UInt16)InputState.KeyboardStates.KEYBOARD_Down;
+            if (m_keyboardState.IsKeyDown(Keys.Up))
+                m_localInputState.m_inputState |= (UInt16)InputState.KeyboardStates.KEYBOARD_Up;
+            if (m_keyboardState.IsKeyDown(Keys.Left))
+                m_localInputState.m_inputState |= (UInt16)InputState.KeyboardStates.KEYBOARD_Left;
+            if (m_keyboardState.IsKeyDown(Keys.Right))
+                m_localInputState.m_inputState |= (UInt16)InputState.KeyboardStates.KEYBOARD_Right;
         }
 
     }
