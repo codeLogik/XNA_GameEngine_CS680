@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using XNA_GameEngine.Core;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -42,10 +44,13 @@ namespace XNA_GameEngine.Rendering
             return g_Renderer;
         }
 
-        public void AddRenderObject(ref RenderObject renderObject)
+        public void AddRenderObject(ICoreComponent coreComponent)
         {
-            if (renderObject != null)
+            if (coreComponent != null && coreComponent.GetComponentType() == ICoreComponent.ComponentType.COMPONENT_Rendering)
             {
+                // Have the render object load its asset and add it to the render object list.
+                RenderObject renderObject = (RenderObject)coreComponent;
+                renderObject.LoadAssetContent(m_mainGame);
                 m_renderObjects.AddLast(renderObject);
             }
         }
@@ -58,7 +63,7 @@ namespace XNA_GameEngine.Rendering
             m_spriteBatch.Begin();
             foreach (RenderObject renderObject in m_renderObjects)
             {
-                renderObject.Render(ref m_spriteBatch);
+                renderObject.Render(m_spriteBatch);
             }
             m_spriteBatch.End();
         }

@@ -23,7 +23,7 @@ namespace XNA_GameEngine.Core
         protected GameObject m_ownerGO;
         protected ComponentType m_Type;
 
-        public ICoreComponent(ref GameObject ownerGO)
+        public ICoreComponent(GameObject ownerGO)
         {
             m_ownerGO = ownerGO;
         }

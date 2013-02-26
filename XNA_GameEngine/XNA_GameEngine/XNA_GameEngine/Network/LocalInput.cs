@@ -29,7 +29,7 @@ namespace XNA_GameEngine.Network
             m_previousKeyboardState = m_keyboardState;
             m_keyboardState = Keyboard.GetState();
 
-            // Build local input state
+            // TODO @tom: Build local input state
         }
 
     }

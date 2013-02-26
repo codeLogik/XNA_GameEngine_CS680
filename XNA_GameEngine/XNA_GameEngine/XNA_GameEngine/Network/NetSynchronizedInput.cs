@@ -13,17 +13,28 @@ namespace XNA_GameEngine.Network
         private InputState [] m_synchronizedStates;
         private InputState[] m_previousSynchronizedStates;
         private LocalInput m_localInput;
+        private LocalInput m_previousLocalInput;
 
         public NetSynchronizedInput()
         {
             m_synchronizedStates = new InputState[XNA_GameEngine.CoreMain.MAX_PLAYERS];
             m_previousSynchronizedStates = new InputState[XNA_GameEngine.CoreMain.MAX_PLAYERS];
             m_localInput = new LocalInput();
+            m_previousLocalInput = new LocalInput();
         }
 
-        public void Update(GameTime gameTime)
+        public void Initialize()
+        {
+            for (int i = 0; i < XNA_GameEngine.CoreMain.MAX_PLAYERS; i++)
+            {
+                m_synchronizedStates[i] = new InputState();
+            }
+        }
+
+        public void Update()
         {
             // Gather the synchronized input of the networked players and the local player.
+            m_previousLocalInput = m_localInput;
             m_localInput.Update();
             for (int i = 0; i < XNA_GameEngine.CoreMain.MAX_PLAYERS; i++)
             {
@@ -51,6 +62,13 @@ namespace XNA_GameEngine.Network
             return (currentInputState.m_inputState & (UInt16)keyState) != 0;
         }
 
+        public bool IsLocalKeyDown(InputState.KeyboardStates keyState)
+        {
+            InputState currentInputState = m_synchronizedStates[CoreMain.s_localPlayer];
+
+            return (currentInputState.m_inputState & (UInt16)keyState) != 0;
+        }
+
         public bool IsKeyPressed(int playerID, InputState.KeyboardStates keyState)
         {
             InputState currentInputState = m_synchronizedStates[playerID];
@@ -59,10 +77,26 @@ namespace XNA_GameEngine.Network
             return ((currentInputState.m_inputState & (UInt16)keyState) != 0) && ((previousInputState.m_inputState & (UInt16)keyState) == 0);
         }
 
+        public bool IsLocalKeyPressed(InputState.KeyboardStates keyState)
+        {
+            InputState currentInputState = m_synchronizedStates[CoreMain.s_localPlayer];
+            InputState previousInputState = m_previousSynchronizedStates[CoreMain.s_localPlayer];
+
+            return ((currentInputState.m_inputState & (UInt16)keyState) != 0) && ((previousInputState.m_inputState & (UInt16)keyState) == 0);
+        }
+
         public bool IsKeyReleased(int playerID, InputState.KeyboardStates keyState)
         {
             InputState currentInputState = m_synchronizedStates[playerID];
             InputState previousInputState = m_previousSynchronizedStates[playerID];
+
+            return ((currentInputState.m_inputState & (UInt16)keyState) == 0) && ((previousInputState.m_inputState & (UInt16)keyState) != 0);
+        }
+
+        public bool IsLocalKeyReleased(InputState.KeyboardStates keyState)
+        {
+            InputState currentInputState = m_synchronizedStates[CoreMain.s_localPlayer];
+            InputState previousInputState = m_previousSynchronizedStates[CoreMain.s_localPlayer];
 
             return ((currentInputState.m_inputState & (UInt16)keyState) == 0) && ((previousInputState.m_inputState & (UInt16)keyState) != 0);
         }

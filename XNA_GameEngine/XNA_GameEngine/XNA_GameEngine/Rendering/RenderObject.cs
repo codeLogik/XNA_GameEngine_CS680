@@ -17,14 +17,21 @@ namespace XNA_GameEngine.Rendering
         float m_fScale;
         float m_fRotation;
         Vector2 m_renderPosition;
+        String m_assetName;
 
-        public RenderObject(ref GameObject parentGO, Texture2D sprite)
-            : base(ref parentGO)
+        public RenderObject(GameObject parentGO, String assetName)
+            : base(parentGO)
         {
             m_fScale = 1.0f;
             m_fRotation = 0.0f;
-            m_sprite = sprite;
+            m_assetName = assetName;
             m_renderPosition = Vector2.Zero;
+            m_Type = ComponentType.COMPONENT_Rendering;
+        }
+
+        public void LoadAssetContent(Game game)
+        {
+            m_sprite = game.Content.Load<Texture2D>(m_assetName);
         }
 
         public override void Update(GameTime gameTime)
@@ -36,7 +43,7 @@ namespace XNA_GameEngine.Rendering
             m_fScale = m_ownerGO.GetScale();
         }
 
-        public void Render(ref SpriteBatch spriteBatch)
+        public void Render(SpriteBatch spriteBatch)
         {
             // Draw the sprite to the sprite batch for the renderer.
             spriteBatch.Draw(

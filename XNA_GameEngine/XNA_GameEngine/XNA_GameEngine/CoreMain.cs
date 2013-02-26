@@ -25,14 +25,13 @@ namespace XNA_GameEngine
         GraphicsDeviceManager m_graphics;
         SpriteBatch m_spriteBatch;
 
-        static public const int MAX_PLAYERS = 4;
+        static public int MAX_PLAYERS = 4;
         static public int s_localPlayer = 0;
         static public bool isServer = false;
 
         public CoreMain()
         {
             m_graphics = new GraphicsDeviceManager(this);
-            m_spriteBatch = new SpriteBatch(GraphicsDevice);
             Content.RootDirectory = "Content";
         }
 
@@ -43,6 +42,7 @@ namespace XNA_GameEngine
         /// </summary>
         protected override void Initialize()
         {
+            m_spriteBatch = new SpriteBatch(GraphicsDevice);
             // Initialize the singleton component managers and worlds.
             NetworkManager.GetInstance().Initialize("localhost", 8888);
             PhysicsWorld.GetInstance().Initialize();
@@ -60,7 +60,9 @@ namespace XNA_GameEngine
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            
+            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
+            playerObject.Initialize();
+            GameplayWorld.GetInstance().AddGameObject(playerObject);
 
             // TODO: use this.Content to load your game content here
         }
@@ -87,9 +89,9 @@ namespace XNA_GameEngine
                 this.Exit();
 
             //  Update all of the core modules
-            GameplayWorld.GetInstance().Update();
+            GameplayWorld.GetInstance().Update(gameTime);
             NetworkManager.GetInstance().Update();
-            PhysicsWorld.GetInstance().Update();
+            PhysicsWorld.GetInstance().Update(gameTime);
             SoundManager.GetInstance().Update();
 
             base.Update(gameTime);

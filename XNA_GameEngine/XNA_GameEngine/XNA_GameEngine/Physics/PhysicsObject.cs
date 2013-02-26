@@ -16,8 +16,8 @@ namespace XNA_GameEngine.Physics
         private float m_fMass;
         private ICollider m_collision;
 
-        public PhysicsObject(ref GameObject parentGO)
-            : base(ref parentGO)
+        public PhysicsObject(GameObject parentGO)
+            : base(parentGO)
         {
             m_Type = ComponentType.COMPONENT_Physics;
             m_ownerGO = parentGO;

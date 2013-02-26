@@ -13,8 +13,8 @@ namespace XNA_GameEngine.Network
     {
         private NetGOState m_netState;
 
-        public NetworkObject(ref GameObject parentGO)
-            : base(ref parentGO)
+        public NetworkObject(GameObject parentGO)
+            : base(parentGO)
         {
             m_Type = ComponentType.COMPONENT_Networking;
         }

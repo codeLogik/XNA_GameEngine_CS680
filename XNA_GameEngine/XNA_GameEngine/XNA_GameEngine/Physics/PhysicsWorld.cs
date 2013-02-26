@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using XNA_GameEngine.Core;
+
+using Microsoft.Xna.Framework;
+
 namespace XNA_GameEngine.Physics
 {
     class PhysicsWorld
@@ -13,7 +17,7 @@ namespace XNA_GameEngine.Physics
 
         public PhysicsWorld()
         {
-
+            m_physicsObjects = new LinkedList<PhysicsObject>();
         }
 
         public void Initialize()
@@ -31,9 +35,21 @@ namespace XNA_GameEngine.Physics
             return g_PhysicsWorld;
         }
 
-        public void Update()
+        public void AddPhysicsObject(ICoreComponent coreComponent)
+        {
+            if (coreComponent != null && coreComponent.GetComponentType() == ICoreComponent.ComponentType.COMPONENT_Physics)
+            {
+                m_physicsObjects.AddLast((PhysicsObject)coreComponent);
+            }
+        }
+
+        public void Update(GameTime gameTime)
         {
             // Simulate the physics for the frame.
+            foreach (PhysicsObject phyObj in m_physicsObjects)
+            {
+                phyObj.Update(gameTime);
+            }
         }
     }
 }

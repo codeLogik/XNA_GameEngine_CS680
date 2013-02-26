@@ -11,6 +11,7 @@ namespace XNA_GameEngine.Network
         private String m_serverURL;
         private int m_port;
         private Dictionary<Guid, NetworkObject> m_GONetComponents;
+        private NetSynchronizedInput m_netSynchronizedInput;
 
         static NetworkManager g_NetworkManager;
 
@@ -19,6 +20,7 @@ namespace XNA_GameEngine.Network
             m_serverURL = null;
             m_port = 0;
             m_GONetComponents = new Dictionary<Guid, NetworkObject>();
+            m_netSynchronizedInput = new NetSynchronizedInput();
             g_NetworkManager = null;
         }
 
@@ -26,6 +28,7 @@ namespace XNA_GameEngine.Network
         {
             m_serverURL = serverURL;
             m_port = port;
+            m_netSynchronizedInput.Initialize();
         }
 
         static public NetworkManager GetInstance()
@@ -38,11 +41,16 @@ namespace XNA_GameEngine.Network
             return g_NetworkManager;
         }
 
-        public void AddNetworkObject(ref NetworkObject networkObject)
+        public NetSynchronizedInput GetNetSynchronizedInput()
         {
-            if (networkObject != null)
+            return m_netSynchronizedInput;
+        }
+
+        public void AddNetworkObject(ICoreComponent networkObject)
+        {
+            if (networkObject != null && networkObject.GetComponentType() == ICoreComponent.ComponentType.COMPONENT_Networking)
             {
-                m_GONetComponents[networkObject.GetParent().GetRef()] = networkObject;
+                m_GONetComponents[networkObject.GetParent().GetRef()] = (NetworkObject)networkObject;
             }
         }
 
@@ -69,6 +77,7 @@ namespace XNA_GameEngine.Network
         public void Update()
         {
             // Ticked once per frame.  Handle processing of the data from Send/Receive packet.
+            m_netSynchronizedInput.Update();
         }
     }
 }

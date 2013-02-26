@@ -10,18 +10,21 @@ namespace XNA_GameEngine.Gameplay
 {
     abstract class GameObject
     {
-        private Vector3 m_vPosition;
-        private float m_fRotation;
-        private float m_fScale;
-        private ICoreComponent [] m_GOComponents;
+        protected Vector2 m_vPosition;
+        protected float m_fRotation;
+        protected float m_fScale;
+        protected ICoreComponent [] m_GOComponents;
         Guid m_GORef;
 
         public GameObject()
         {
             m_GOComponents = new ICoreComponent[(int)ICoreComponent.ComponentType.COMPONENT_COUNT];
+            m_vPosition = Vector2.Zero;
+            m_fScale = 1.0f;
+            m_fRotation = 0.0f;
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             for (int i = 0; i < (int)ICoreComponent.ComponentType.COMPONENT_COUNT; i++)
             {
@@ -49,12 +52,12 @@ namespace XNA_GameEngine.Gameplay
         }
 
 
-        public Vector3 GetPosition()
+        public Vector2 GetPosition()
         {
             return m_vPosition;
         }
 
-        public void SetPosition(Vector3 position)
+        public void SetPosition(Vector2 position)
         {
             m_vPosition = position;
         }
@@ -79,7 +82,7 @@ namespace XNA_GameEngine.Gameplay
 
         }
 
-        public void Render()
+        public virtual void Render()
         {
             // Code for setting up graphics data to be rendered.
 
