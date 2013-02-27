@@ -116,12 +116,15 @@
     <Compile Include="Network\LocalInput.cs" />
     <Compile Include="Network\NetGameState.cs" />
     <Compile Include="Network\NetGOState.cs" />
+    <Compile Include="Network\NetInputState.cs" />
     <Compile Include="Network\NetSynchronizedInput.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\NetworkDataTypes\NVec2.cs" />
     <Compile Include="Network\NetworkManager.cs" />
     <Compile Include="Network\NetworkObject.cs" />
     <Compile Include="Network\NetworkServer.cs" />
+    <Compile Include="Network\NetworkPacket.cs" />
+    <Compile Include="Network\NetworkThread.cs" />
     <Compile Include="Network\NFSM.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />

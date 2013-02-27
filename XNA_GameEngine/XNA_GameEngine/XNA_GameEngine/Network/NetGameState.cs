@@ -5,7 +5,15 @@ using System.Text;
 
 namespace XNA_GameEngine.Network
 {
-    class NetGameState
+    [Serializable]
+    class NetGameState : NetworkPacket
     {
+        public NetworkObject[] m_networkObjects;
+
+        public NetGameState(NetworkObject[] networkObjects, UInt64 frameNumber)
+            : base(frameNumber)
+        {
+            m_networkObjects = networkObjects;
+        }
     }
 }

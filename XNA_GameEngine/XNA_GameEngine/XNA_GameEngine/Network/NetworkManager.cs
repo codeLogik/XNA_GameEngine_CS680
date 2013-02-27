@@ -3,32 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XNA_GameEngine.Core;
+using System.Net;
 
 namespace XNA_GameEngine.Network
 {
     class NetworkManager
     {
-        private String m_serverURL;
-        private int m_port;
+        private NetworkThread networkThread;
+
         private Dictionary<Guid, NetworkObject> m_GONetComponents;
+        
         private NetSynchronizedInput m_netSynchronizedInput;
 
-        static NetworkManager g_NetworkManager;
+        // Network game states
+        
+        
 
+        // Network manager singleton.
+        private static NetworkManager g_NetworkManager;
+
+        
         public NetworkManager()
         {
-            m_serverURL = null;
-            m_port = 0;
             m_GONetComponents = new Dictionary<Guid, NetworkObject>();
+            m_receivedGameState = null;
             m_netSynchronizedInput = new NetSynchronizedInput();
             g_NetworkManager = null;
+            networkThread = null;
         }
 
         public void Initialize(String serverURL, int port)
         {
-            m_serverURL = serverURL;
-            m_port = port;
             m_netSynchronizedInput.Initialize();
+
+            // Initialize the network thread for either a server, client, or observer.
+
         }
 
         static public NetworkManager GetInstance()
@@ -41,11 +50,6 @@ namespace XNA_GameEngine.Network
             return g_NetworkManager;
         }
 
-        public NetSynchronizedInput GetNetSynchronizedInput()
-        {
-            return m_netSynchronizedInput;
-        }
-
         public void AddNetworkObject(ICoreComponent networkObject)
         {
             if (networkObject != null && networkObject.GetComponentType() == ICoreComponent.ComponentType.COMPONENT_Networking)
@@ -54,30 +58,51 @@ namespace XNA_GameEngine.Network
             }
         }
 
-        public void StartServerLobby()
-        {
-            // Starts the thread for listening on requests to join lobby or observe game.
-        }
-
-        public void RequestJoinSession(/*IP Address*/)
-        {
-            // Query the server at the IP address to join the session.
-        }
-
-        public void StartServer()
-        {
-            // Initialize and start the server thread as well as the lobby thread.
-        }
-
-        public void StartClient()
-        {
-
-        }
-
         public void Update()
         {
-            // Ticked once per frame.  Handle processing of the data from Send/Receive packet.
-            m_netSynchronizedInput.Update();
+            if (CoreMain.isServer)
+            {
+                // Get the input states from the server thread and add into array of input states.
+                System.Diagnostics.Debug.Assert(networkThread is NetworkServer, "Server expects to have a network server thread!");
+                NetworkServer networkServer = (NetworkServer)networkThread;
+                LinkedList<NetInputState> netInputStates = null;
+                networkServer.GetReceivedInputStates(ref netInputStates);
+
+                // Build the player array of network inputs.
+                InputState[] inputStates = new InputState[CoreMain.MAX_PLAYERS];
+                foreach (NetInputState netInputState in netInputStates)
+                {
+                    // If the input state has not been filled in yet for the player, then add it.  Otherwise
+                    // accumulate the input together for the multiple input states received for that player.
+                    UInt16 playerID = netInputState.m_playerID;
+                    if (inputStates[playerID] == null)
+                    {
+                        inputStates[playerID] = netInputState.m_inputState;
+                    }
+                    else
+                    {
+                        inputStates[playerID] = inputStates[playerID] + netInputState.m_inputState;
+                    }
+                }
+
+                // Update the network synchronized input with the newly received input states.
+                m_netSynchronizedInput.Update(inputStates);
+
+                // Handle setting up the simulated NetGameState from the network objects that we are watching.
+                List<NetworkObject> goNetObjects = m_GONetComponents.Values.ToList();
+                NetworkObject[] netObjects = new NetworkObject[goNetObjects.Count];
+                for (int i = 0; i < goNetObjects.Count; i++)
+                {
+                    netObjects[i] = goNetObjects[i];
+                }
+
+                // Queue the new network game state for the network server.
+                networkServer.QueueSimulatedGameState(new NetGameState(netObjects, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
+            }
+            else
+            {
+
+            }
         }
     }
 }

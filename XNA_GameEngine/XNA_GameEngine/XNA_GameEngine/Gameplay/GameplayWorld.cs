@@ -9,17 +9,22 @@ namespace XNA_GameEngine.Gameplay
 {
     class GameplayWorld
     {
-        private LinkedList<GameObject> m_gameObjects;
+        private Dictionary<Guid, GameObject> m_gameObjects;
+
+        // Simulation tick count.
+        UInt64 m_frameNumber;
+
+        // Gameplay world singleton.
         static private GameplayWorld g_GameplayWorld;
 
         public GameplayWorld()
         {
-            m_gameObjects = new LinkedList<GameObject>();
+            m_gameObjects = new Dictionary<Guid, GameObject>();
         }
 
         public void Initialize()
         {
-
+            m_frameNumber = 0;
         }
 
         static public GameplayWorld GetInstance()
@@ -32,11 +37,17 @@ namespace XNA_GameEngine.Gameplay
             return g_GameplayWorld;
         }
 
+        public UInt64 GetCurrentFrameNumber()
+        {
+            return m_frameNumber;
+        }
+
         public void AddGameObject(GameObject go)
         {
             if (go != null)
             {
-                m_gameObjects.AddLast(go);
+                Guid newObjGuid = Guid.NewGuid();
+                m_gameObjects.Add(newObjGuid, go);
 
                 // Add components to other modules
                 Network.NetworkManager.GetInstance().AddNetworkObject(go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Networking));
@@ -47,8 +58,10 @@ namespace XNA_GameEngine.Gameplay
 
         public void Update(GameTime gameTime)
         {
+            m_frameNumber++;
             // Handle updating all game objects registered in the gameplay world.
-            foreach (GameObject go in m_gameObjects)
+            List<GameObject> gameObjects = m_gameObjects.Values.ToList();
+            foreach (GameObject go in gameObjects)
             {
                 go.Update(gameTime);
             }
