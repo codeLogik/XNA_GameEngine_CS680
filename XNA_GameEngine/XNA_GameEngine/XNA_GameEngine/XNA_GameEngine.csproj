@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CoreComponent.cs" />
+    <Compile Include="Debug\DebugColliderObject.cs" />
     <Compile Include="Debug\DebugPlayerObject.cs" />
     <Compile Include="Debug\DebugTools.cs" />
     <Compile Include="Gameplay\GameObject.cs" />
@@ -123,7 +124,12 @@
     <Compile Include="Network\NetworkObject.cs" />
     <Compile Include="Network\NetworkServer.cs" />
     <Compile Include="Network\NFSM.cs" />
-    <Compile Include="Physics\Collider.cs" />
+    <Compile Include="Physics\Colliders\CircleCollider.cs" />
+    <Compile Include="Physics\Colliders\SquareCollider.cs" />
+    <Compile Include="Physics\Colliders\Collider.cs" />
+    <Compile Include="Physics\Modules\CollisionModule.cs" />
+    <Compile Include="Physics\Modules\ConstantVelocityModule.cs" />
+    <Compile Include="Physics\Modules\PhysicsModule.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />
     <Compile Include="Physics\PhysicsWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

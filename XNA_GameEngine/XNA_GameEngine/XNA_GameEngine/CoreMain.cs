@@ -61,8 +61,11 @@ namespace XNA_GameEngine
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
+            Debug.DebugColliderObject collider = new Debug.DebugColliderObject();
             playerObject.Initialize();
+            collider.Initialize();
             GameplayWorld.GetInstance().AddGameObject(playerObject);
+            GameplayWorld.GetInstance().AddGameObject(collider);
 
             // TODO: use this.Content to load your game content here
         }

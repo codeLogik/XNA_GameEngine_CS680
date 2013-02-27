@@ -12,12 +12,14 @@ namespace XNA_GameEngine.Physics
     class PhysicsWorld
     {
         private LinkedList<PhysicsObject> m_physicsObjects;
+        private LinkedList<PhysicsObject> m_updatedPhysicsObjects;
 
         private static PhysicsWorld g_PhysicsWorld;
 
         public PhysicsWorld()
         {
             m_physicsObjects = new LinkedList<PhysicsObject>();
+            m_updatedPhysicsObjects = new LinkedList<PhysicsObject>();
         }
 
         public void Initialize()
@@ -35,6 +37,11 @@ namespace XNA_GameEngine.Physics
             return g_PhysicsWorld;
         }
 
+        public LinkedList<PhysicsObject> GetAlreadyUpdatedObjects()
+        {
+            return m_updatedPhysicsObjects;
+        }
+
         public void AddPhysicsObject(ICoreComponent coreComponent)
         {
             if (coreComponent != null && coreComponent.GetComponentType() == ICoreComponent.ComponentType.COMPONENT_Physics)
@@ -45,10 +52,12 @@ namespace XNA_GameEngine.Physics
 
         public void Update(GameTime gameTime)
         {
+            m_updatedPhysicsObjects.Clear();
             // Simulate the physics for the frame.
             foreach (PhysicsObject phyObj in m_physicsObjects)
             {
                 phyObj.Update(gameTime);
+                m_updatedPhysicsObjects.AddLast(phyObj);
             }
         }
     }

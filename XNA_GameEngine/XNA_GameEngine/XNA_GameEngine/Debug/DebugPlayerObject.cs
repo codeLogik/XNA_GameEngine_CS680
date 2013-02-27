@@ -34,6 +34,10 @@ namespace XNA_GameEngine.Debug
             String assetName = "debug_player";
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
             AddComponent(renderObject);
+            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this);
+            physicsObject.AddModule(new Physics.Modules.ConstantVelocityModule(new Vector2(0.0f, 10.0f)));
+            physicsObject.AddModule(new Physics.Modules.CollisionModule(new Physics.Colliders.CircleCollider(this, new Vector2(0.0f, 0.0f), 10.0f), 0.5f));
+            AddComponent(physicsObject);
         }
 
         public override void Update(GameTime gameTime)
