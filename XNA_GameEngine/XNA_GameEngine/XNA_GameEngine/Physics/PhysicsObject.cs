@@ -8,79 +8,68 @@ using Microsoft.Xna.Framework;
 using XNA_GameEngine.Gameplay;
 using XNA_GameEngine.Core;
 using XNA_GameEngine.Physics.Colliders;
-using XNA_GameEngine.Physics.Modules;
 
 namespace XNA_GameEngine.Physics
 {
     class PhysicsObject : ICoreComponent
     {
-        public enum ModuleType
-        {
-            MODULE_ConstantVelocity = 0,
-            MODULE_Collision,
-            MODULE_COUNT
-        }
+        private ICollider m_collider;
+        private bool m_bImmobile;
 
-        private Vector2 m_vCurrentVelocity;
-        private Vector2 m_vProjectedVelocity;
-        private float m_fMass;
-        private IPhysicsModule[] m_modules;
-
-        public PhysicsObject(GameObject parentGO)
+        public PhysicsObject(GameObject parentGO, ICollider collider)
             : base(parentGO)
         {
-            m_modules = new IPhysicsModule[(int)ModuleType.MODULE_COUNT];
-
-            m_vCurrentVelocity = new Vector2(0.0f, 0.0f);
-            m_vProjectedVelocity = new Vector2(0.0f, 0.0f);
             m_Type = ComponentType.COMPONENT_Physics;
             m_ownerGO = parentGO;
+            m_collider = collider;
+            m_bImmobile = false;
         }
 
-        public bool HasModule(PhysicsObject.ModuleType type) {
-            return (m_modules[(int)type] != null);
-        }
-
-        public IPhysicsModule GetModule(PhysicsObject.ModuleType type)
+        public void Immobilize()
         {
-            return m_modules[(int)type];
-        }
-
-        public void AddModule(IPhysicsModule module)
-        {
-            m_modules[(int)module.GetModuleType()] = module;
-        }
-
-        public void AlterVelocity(Vector2 by)
-        {
-            m_vProjectedVelocity.X += by.X;
-            m_vProjectedVelocity.Y += by.Y;
+            m_bImmobile = true;
         }
 
         public void Initialize()
         {
-            for (int i = 0; i < (int)PhysicsObject.ModuleType.MODULE_COUNT; i++)
-            {
-                m_modules[i] = null;
-            }
+
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Update the current velocity and object position
-            m_vCurrentVelocity = m_vProjectedVelocity;
-            double elapsedTimeInSec = gameTime.ElapsedGameTime.TotalSeconds;
-            Vector2 objectPosition = this.GetParent().GetPosition();
-            objectPosition.X += (float)(elapsedTimeInSec * m_vCurrentVelocity.X);
-            objectPosition.Y += (float)(elapsedTimeInSec * m_vCurrentVelocity.Y);
-            this.GetParent().SetPosition(objectPosition);
-
-            // Determine the projected velocity for the next update
-            foreach (IPhysicsModule module in m_modules)
+            if (!m_bImmobile)
             {
-                if (module != null)
+                Vector2 forceSum = PhysicsWorld.GetInstance().GetGravity() * m_collider.GetMass();
+
+                double elapsedTimeInSec = gameTime.ElapsedGameTime.TotalSeconds;
+                Vector2 originalPosition = GetParent().GetPosition();
+                Vector2 originalVelocity = m_collider.GetVelocity();
+                Vector2 newPosition = originalPosition + (originalVelocity * (float)elapsedTimeInSec);
+                Vector2 newVelocity = originalVelocity + ((forceSum / m_collider.GetMass()) * (float)elapsedTimeInSec);
+
+                GetParent().SetPosition(newPosition);
+                m_collider.SetVelocity(newVelocity);
+
+                //TODO: Angular stuff
+            }
+            
+            LinkedList<PhysicsObject> updatedObjects = PhysicsWorld.GetInstance().GetAlreadyUpdatedObjects();
+            foreach (PhysicsObject physObj in updatedObjects)
+            {
+                if (physObj.GetParent() != m_collider.GetParent())
                 {
-                    module.Update(gameTime, this);
+                    ICollider other = physObj.m_collider;
+                    Collision collision = m_collider.CollidesWith(other);
+                    if (collision != null)
+                    {
+                        Vector2 n = collision.GetAxisOfCollision();
+                        float tmp1 = Vector2.Dot(m_collider.GetVelocity(), n);
+                        float tmp2 = Vector2.Dot(other.GetVelocity(), n);
+                        double impulse = ((m_collider.GetElasticity() + other.GetElasticity() + 1.0f) * (tmp2 - tmp1)) / ((1.0f / m_collider.GetMass()) + (1.0f / other.GetMass()));
+                        Vector2 impulseVector = (float)impulse * n;
+                        m_collider.SetVelocity(m_collider.GetVelocity() + (impulseVector / m_collider.GetMass()));
+                        other.SetVelocity(other.GetVelocity() - (impulseVector / other.GetMass()));
+                    }
                 }
             }
         }

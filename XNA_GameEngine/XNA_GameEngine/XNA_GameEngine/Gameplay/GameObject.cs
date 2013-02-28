@@ -82,7 +82,7 @@ namespace XNA_GameEngine.Gameplay
             // Run update on all of the components
             foreach (ICoreComponent coreComponent in m_GOComponents)
             {
-                if (coreComponent != null)
+                if (coreComponent != null && coreComponent.GetComponentType() != ICoreComponent.ComponentType.COMPONENT_Physics)
                 {
                     coreComponent.Update(gameTime);
                 }

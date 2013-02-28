@@ -13,11 +13,13 @@ namespace XNA_GameEngine.Physics
     {
         private LinkedList<PhysicsObject> m_physicsObjects;
         private LinkedList<PhysicsObject> m_updatedPhysicsObjects;
+        private Vector2 m_vGravity;
 
         private static PhysicsWorld g_PhysicsWorld;
 
         public PhysicsWorld()
         {
+            m_vGravity = Vector2.Zero;
             m_physicsObjects = new LinkedList<PhysicsObject>();
             m_updatedPhysicsObjects = new LinkedList<PhysicsObject>();
         }
@@ -25,6 +27,16 @@ namespace XNA_GameEngine.Physics
         public void Initialize()
         {
 
+        }
+
+        public void SetGravity(Vector2 gravity)
+        {
+            m_vGravity = gravity;
+        }
+
+        public Vector2 GetGravity()
+        {
+            return m_vGravity;
         }
 
         static public PhysicsWorld GetInstance()

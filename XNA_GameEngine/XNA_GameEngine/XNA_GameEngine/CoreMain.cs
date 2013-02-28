@@ -46,6 +46,7 @@ namespace XNA_GameEngine
             // Initialize the singleton component managers and worlds.
             NetworkManager.GetInstance().Initialize("localhost", 8888);
             PhysicsWorld.GetInstance().Initialize();
+            //PhysicsWorld.GetInstance().SetGravity(new Vector2(0.0f, 100.0f));
             GameplayWorld.GetInstance().Initialize();
             Renderer.GetInstance().Initialize(this, GraphicsDevice);
             SoundManager.GetInstance().Initialize();

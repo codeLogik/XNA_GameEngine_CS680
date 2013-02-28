@@ -12,11 +12,14 @@ namespace XNA_GameEngine.Physics.Colliders
     {
         protected Vector2 m_vRelativeOrigin;
         protected Vector2 m_vSize;
+        protected float m_fMomentOfInertia;
 
-        public SquareCollider(GameObject parent, Vector2 relativeOrigin, Vector2 size) : base(parent)
+        public SquareCollider(GameObject parent, float mass, Vector2 relativeOrigin, Vector2 size) 
+            : base(parent, mass)
         {
             m_vRelativeOrigin = relativeOrigin;
             m_vSize = size;
+            m_fMomentOfInertia = m_fMass * (m_vSize.Y * m_vSize.Y + m_vSize.X + m_vSize.X) / 12.0f;
         }
 
         public Vector2 GetWorldOrigin()
@@ -24,7 +27,12 @@ namespace XNA_GameEngine.Physics.Colliders
             return (GetParent().GetPosition() + m_vRelativeOrigin);
         }
 
-        public override bool CollidesWith(SquareCollider other)
+        public override float GetMomentOfInertia()
+        {
+            return m_fMomentOfInertia;
+        }
+
+        public override Collision CollidesWith(SquareCollider other)
         {
             Vector2 myOrigin = GetWorldOrigin();
             Vector2 otherOrigin = other.GetWorldOrigin();
@@ -33,14 +41,19 @@ namespace XNA_GameEngine.Physics.Colliders
                 myOrigin.Y > otherOrigin.Y + other.m_vSize.Y ||
                 myOrigin.Y + m_vSize.Y < otherOrigin.Y)
             {
-                return false;
+                return null;
             }
-            return true;
+            return null;
         }
 
-        public override bool CollidesWith(CircleCollider other)
+        public override Collision CollidesWith(LineCollider other)
         {
-            return false;
+            return null;
+        }
+
+        public override Collision CollidesWith(CircleCollider other)
+        {
+            return null;
         }
     }
 }

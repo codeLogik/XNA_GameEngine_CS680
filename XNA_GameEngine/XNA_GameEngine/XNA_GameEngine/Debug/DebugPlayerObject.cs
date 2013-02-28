@@ -15,6 +15,7 @@ namespace XNA_GameEngine.Debug
     class DebugPlayerObject : GameObject
     {
         private float m_fSpeed;
+        private Physics.Colliders.ICollider m_collider;
 
         public DebugPlayerObject()
         {
@@ -27,16 +28,16 @@ namespace XNA_GameEngine.Debug
 
             m_fScale = 1.0f;
             m_fRotation = 0.0f;
-            m_vPosition = new Vector2(4.0f, 4.0f);
+            m_vPosition = new Vector2(0.0f, 0.0f);
             m_fSpeed = 100.0f;
 
             // Add render component.
             String assetName = "debug_player";
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
             AddComponent(renderObject);
-            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this);
-            physicsObject.AddModule(new Physics.Modules.ConstantVelocityModule(new Vector2(0.0f, 10.0f)));
-            physicsObject.AddModule(new Physics.Modules.CollisionModule(new Physics.Colliders.CircleCollider(this, new Vector2(0.0f, 0.0f), 10.0f), 0.5f));
+            Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(this, 50.0f, 64.5f);
+            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, collider);
+            m_collider = collider;
             AddComponent(physicsObject);
         }
 
@@ -48,19 +49,19 @@ namespace XNA_GameEngine.Debug
             NetSynchronizedInput synchronizedInput = NetworkManager.GetInstance().GetNetSynchronizedInput();
             if(synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Up))
             {
-                m_vPosition.Y -= m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                m_collider.SetVelocity(m_collider.GetVelocity() + new Vector2(0.0f,-5.0f));
             }
             if (synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Down))
             {
-                m_vPosition.Y += m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                m_collider.SetVelocity(m_collider.GetVelocity() + new Vector2(0.0f, 5.0f));
             }
             if (synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Right))
             {
-                m_vPosition.X += m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                m_collider.SetVelocity(m_collider.GetVelocity() + new Vector2(5.0f, 0.0f));
             }
             if (synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Left))
             {
-                m_vPosition.X -= m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                m_collider.SetVelocity(m_collider.GetVelocity() + new Vector2(-5.0f, 0.0f));
             }
         }
     }
