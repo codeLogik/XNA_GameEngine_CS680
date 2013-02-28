@@ -108,9 +108,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CoreComponent.cs" />
+    <Compile Include="Debug\DebugColliderObject2.cs" />
+    <Compile Include="Debug\SceneBoundingBoxRight.cs" />
+    <Compile Include="Debug\SceneBoundingBoxLeft.cs" />
+    <Compile Include="Debug\SceneBoundingBoxBottom.cs" />
     <Compile Include="Debug\DebugColliderObject.cs" />
     <Compile Include="Debug\DebugPlayerObject.cs" />
     <Compile Include="Debug\DebugTools.cs" />
+    <Compile Include="Debug\SceneBoundingBoxTop.cs" />
     <Compile Include="Gameplay\GameObject.cs" />
     <Compile Include="Gameplay\GameplayWorld.cs" />
     <Compile Include="Network\InputState.cs" />

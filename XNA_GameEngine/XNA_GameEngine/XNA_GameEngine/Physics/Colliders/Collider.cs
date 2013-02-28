@@ -10,12 +10,14 @@ namespace XNA_GameEngine.Physics.Colliders
 {
     struct CollisionPoint {
         public Vector2 WorldLocation;
+        public Vector2 AxisOfCollision;
         public ICollider ThisCollider;
         public ICollider OtherCollider;
 
-        public CollisionPoint(Vector2 worldLocation, ICollider thisCollider, ICollider other)
+        public CollisionPoint(Vector2 worldLocation, Vector2 axisOfCollision, ICollider thisCollider, ICollider other)
         {
             WorldLocation = worldLocation;
+            AxisOfCollision = axisOfCollision;
             ThisCollider = thisCollider;
             OtherCollider = other;
         }
@@ -24,22 +26,33 @@ namespace XNA_GameEngine.Physics.Colliders
     class Collision
     {
         private LinkedList<CollisionPoint> m_collisionPoints;
-        private Vector2 m_vAxisOfCollision;
+        private Vector2 m_vResolveOverlap;
 
-        public Collision(CollisionPoint point, Vector2 axisOfCollision)
+        public Collision()
+        {
+            m_collisionPoints = new LinkedList<CollisionPoint>();
+            m_vResolveOverlap = Vector2.Zero;
+        }
+
+        public Collision(CollisionPoint point)
         {
             m_collisionPoints = new LinkedList<CollisionPoint>();
             m_collisionPoints.AddLast(point);
-            m_vAxisOfCollision = axisOfCollision;
-        }
-
-        public Vector2 GetAxisOfCollision()
-        {
-            return m_vAxisOfCollision;
+            m_vResolveOverlap = Vector2.Zero;
         }
 
         public void AddCollisionPoint(CollisionPoint point) {
             m_collisionPoints.AddLast(point);
+        }
+
+        public void SetResolveOverlap(Vector2 resolveOverlap)
+        {
+            m_vResolveOverlap = resolveOverlap;
+        }
+
+        public Vector2 GetResolveOverlap()
+        {
+            return m_vResolveOverlap;
         }
 
         public LinkedList<CollisionPoint> GetPoints()
@@ -50,54 +63,27 @@ namespace XNA_GameEngine.Physics.Colliders
 
     abstract class ICollider
     {
-        protected Vector2 m_vVelocity;
-        protected Vector2 m_vAcceleration;
-        protected float m_fAngularVelocity;
-        protected float m_fAngularAcceleration;
-        protected float m_fMass;
-        protected float m_fElasticity;
-        protected GameObject m_parent;
+        protected PhysicsObject m_parent;
 
-        public ICollider(GameObject gameObject, float mass)
+        public ICollider()
         {
-            m_parent = gameObject;
-
-            m_fMass = mass;
-            m_vVelocity = new Vector2(0.0f, 0.0f);
-            m_vAcceleration = new Vector2(0.0f, 0.0f);
-            m_fAngularVelocity = 0.0f;
-            m_fAngularAcceleration = 0.0f;
-            m_fElasticity = 0.5f;
+            m_parent = null;
         }
 
-        public float GetElasticity()
-        {
-            return m_fElasticity;
-        }
-
-        public GameObject GetParent()
+        public PhysicsObject GetParent()
         {
             return m_parent;
         }
 
-        public float GetMass()
+        public void SetParent(PhysicsObject parent)
         {
-            return m_fMass;
-        }
-
-        public Vector2 GetVelocity()
-        {
-            return m_vVelocity;
-        }
-
-        public void SetVelocity(Vector2 velocity)
-        {
-            m_vVelocity = velocity;
+            m_parent = parent;
         }
 
         public Vector2 TransformToWorld(Vector2 point)
         {
-            return GetParent().GetPosition() + point;
+            // TODO this probably doesnt work.
+            return GetParent().GetParent().GetPosition() + point;
         }
 
         public Collision CollidesWith(ICollider other)
@@ -129,7 +115,7 @@ namespace XNA_GameEngine.Physics.Colliders
             return true;
         }
 
-        public abstract float GetMomentOfInertia();
+        public abstract float GetMomentOfInertia(float mass);
         public abstract Collision CollidesWith(SquareCollider other);
         public abstract Collision CollidesWith(CircleCollider other);
         public abstract Collision CollidesWith(LineCollider other);

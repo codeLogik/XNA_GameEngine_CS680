@@ -14,8 +14,7 @@ namespace XNA_GameEngine.Physics.Colliders
         private Vector2 m_vRelativePointB;
 
         // Since lines technically have two normals, the user has to specify one.
-        public LineCollider(GameObject gameObject, float mass, Vector2 relativePointA, Vector2 relativePointB)
-            : base(gameObject, mass)
+        public LineCollider(Vector2 relativePointA, Vector2 relativePointB)
         {
             m_vRelativePointA = relativePointA;
             m_vRelativePointB = relativePointB;
@@ -23,17 +22,17 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public Vector2 GetWorldPointA()
         {
-            return GetParent().GetPosition() + m_vRelativePointA;
+            return GetParent().GetParent().GetPosition() + m_vRelativePointA;
         }
 
         public Vector2 GetWorldPointB()
         {
-            return GetParent().GetPosition() + m_vRelativePointB;
+            return GetParent().GetParent().GetPosition() + m_vRelativePointB;
         }
 
-        public override float GetMomentOfInertia()
+        public override float GetMomentOfInertia(float mass)
         {
-            return 0.0f;
+            return mass * ((m_vRelativePointB - m_vRelativePointA).LengthSquared() + 1) / 12.0f;
         }
 
         public override Collision CollidesWith(LineCollider other)
@@ -42,7 +41,7 @@ namespace XNA_GameEngine.Physics.Colliders
             Vector2 myPointB = GetWorldPointB();
             Vector2 otherPointA = other.GetWorldPointA();
             Vector2 otherPointB = other.GetWorldPointB();
-
+            
             // Trivial bounding box test
             Vector2 myTopLeft = new Vector2();
             Vector2 myBottomRight = new Vector2();
@@ -67,31 +66,97 @@ namespace XNA_GameEngine.Physics.Colliders
             if(!base.BoundingBoxesOverlap(myTopLeft, myBottomRight, otherTopLeft, otherBottomRight)) {
                 return null;
             }
+           // XNA_GameEngine.Debug.DebugTools.Report("collision!");
 
             float denominator = (otherPointB.Y - otherPointA.Y) * (myPointB.X - myPointA.X) - (otherPointB.X - otherPointA.X) * (myPointB.Y - myPointA.Y);
-            if (denominator == 0)
+            if (denominator < 0.0001f)
             {
                 return null;
             }
             float distAlongThis = ((otherPointB.X - otherPointA.X) * (myPointA.Y - otherPointA.Y) - (otherPointB.Y - otherPointA.Y) * (myPointA.X - otherPointA.X)) / denominator;
-            if (distAlongThis < 0 || distAlongThis > 1)
+            if (distAlongThis < 0.01f || distAlongThis > 0.99f)
             {
                 return null;
             }
             float distAlongOther = ((myPointB.X - myPointA.X) * (myPointA.Y - otherPointA.Y) - (myPointB.Y - myPointA.Y) * (myPointA.X - otherPointA.X)) / denominator;
-            if (distAlongOther < 0 || distAlongOther > 1)
+            if (distAlongOther < 0.01f || distAlongOther > 0.99f)
             {
                 return null;
             }
 
+          //  XNA_GameEngine.Debug.DebugTools.Report("collision reported!");
+
             Vector2 pointOfCollision = myPointA + (distAlongThis * (myPointB - myPointA));
-            Collision collision = new Collision(new CollisionPoint(pointOfCollision, this, other), Vector2.Zero);
+            Collision collision = new Collision(new CollisionPoint(pointOfCollision, Vector2.Zero, this, other));
             return collision;
         }
 
         public override Collision CollidesWith(SquareCollider other)
         {
-            return null;
+            Vector2 otherTopLeft = other.GetTopLeft();
+            Vector2 otherBottomRight = other.GetBottomRight();
+
+            // Trivial bounding box test
+            Vector2 myTopLeft = new Vector2();
+            Vector2 myBottomRight = new Vector2();
+            if (GetWorldPointA().X > GetWorldPointB().X)
+            {
+                myTopLeft.X = GetWorldPointB().X;
+                myBottomRight.X = GetWorldPointA().X;
+            }
+            else
+            {
+                myTopLeft.X = GetWorldPointA().X;
+                myBottomRight.X = GetWorldPointB().X;
+            }
+            if (GetWorldPointA().Y > GetWorldPointB().Y)
+            {
+                myTopLeft.Y = GetWorldPointB().Y;
+                myBottomRight.Y = GetWorldPointA().Y;
+            }
+            else
+            {
+                myTopLeft.Y = GetWorldPointA().Y;
+                myBottomRight.Y = GetWorldPointB().Y;
+            }
+
+            // Trivial bounding box test
+            if (!base.BoundingBoxesOverlap(myTopLeft, myBottomRight, otherTopLeft, otherBottomRight))
+            {
+                return null;
+            }
+
+            LineCollider[] otherSides = new LineCollider[4];
+
+            otherSides[0] = new LineCollider(new Vector2(-(other.GetSize().X / 2.0f), -(other.GetSize().Y / 2.0f)), new Vector2((other.GetSize().X / 2.0f), -(other.GetSize().Y / 2.0f)));
+            otherSides[0].SetParent(other.GetParent());
+            otherSides[1] = new LineCollider(new Vector2(-(other.GetSize().X / 2.0f), (other.GetSize().Y / 2.0f)), new Vector2((other.GetSize().X / 2.0f), (other.GetSize().Y / 2.0f)));
+            otherSides[1].SetParent(other.GetParent());
+            otherSides[2] = new LineCollider(new Vector2(-(other.GetSize().X / 2.0f), -(other.GetSize().Y / 2.0f)), new Vector2(-(other.GetSize().X / 2.0f), (other.GetSize().Y / 2.0f)));
+            otherSides[2].SetParent(other.GetParent());
+            otherSides[3] = new LineCollider(new Vector2((other.GetSize().X / 2.0f), -(other.GetSize().Y / 2.0f)), new Vector2((other.GetSize().X / 2.0f), (other.GetSize().Y / 2.0f)));
+            otherSides[3].SetParent(other.GetParent());
+
+            Collision collision = new Collision();
+            for (int i = 0; i < 4; i++)
+            {
+                Collision thisCollision = CollidesWith(otherSides[i]);
+                if (thisCollision != null)
+                {
+                    foreach (CollisionPoint point in thisCollision.GetPoints())
+                    {
+                        Vector2 location = point.WorldLocation;
+                        Vector2 axisOfCollision = other.GetParent().GetParent().GetPosition() - location;
+                        collision.AddCollisionPoint(new CollisionPoint(location, axisOfCollision, this, other));
+                    }
+                }
+            }
+            if (collision.GetPoints().Count == 0)
+            {
+                return null;
+            }
+
+            return collision;
         }
 
         public override Collision CollidesWith(CircleCollider other)
@@ -99,23 +164,33 @@ namespace XNA_GameEngine.Physics.Colliders
             Vector2 otherWorldOrigin = other.GetOrigin();
             Vector2 myPointA = GetWorldPointA() - otherWorldOrigin;
             Vector2 myPointB = GetWorldPointB() - otherWorldOrigin;
-
+           
             // Trivial bounding box test
             Vector2 myTopLeft = new Vector2();
             Vector2 myBottomRight = new Vector2();
-            if (GetWorldPointA().X > GetWorldPointA().X)
+            if (GetWorldPointA().X > GetWorldPointB().X)
             {
-                myTopLeft.X = GetWorldPointA().X;
+                myTopLeft.X = GetWorldPointB().X;
                 myBottomRight.X = GetWorldPointA().X;
             }
-            if (GetWorldPointA().Y > GetWorldPointA().Y)
+            else
+            {
+                myTopLeft.X = GetWorldPointA().X;
+                myBottomRight.X = GetWorldPointB().X;
+            }
+            if (GetWorldPointA().Y > GetWorldPointB().Y)
+            {
+                myTopLeft.Y = GetWorldPointB().Y;
+                myBottomRight.Y = GetWorldPointA().Y;
+            }
+            else
             {
                 myTopLeft.Y = GetWorldPointA().Y;
-                myBottomRight.Y = GetWorldPointA().Y;
+                myBottomRight.Y = GetWorldPointB().Y;
             }
             Vector2 otherTopLeft = new Vector2(otherWorldOrigin.X - other.GetRadius(), otherWorldOrigin.Y - other.GetRadius());
             Vector2 otherBottomRight = new Vector2(otherWorldOrigin.X + other.GetRadius(), otherWorldOrigin.Y + other.GetRadius());
-          
+            
             if (!base.BoundingBoxesOverlap(myTopLeft, myBottomRight, otherTopLeft, otherBottomRight))
             {
                 return null;
@@ -131,7 +206,7 @@ namespace XNA_GameEngine.Physics.Colliders
                 return null;
             }
             // Basically zero
-            else if (delta < 0.5f)
+            else if (delta < 1.0f)
             {
                 float distAlongLine = (-b) / (2 * a);
                 if (distAlongLine < 0 || distAlongLine > 1)
@@ -139,8 +214,8 @@ namespace XNA_GameEngine.Physics.Colliders
                     return null;
                 }
                 Vector2 pointOfCollision = GetWorldPointA() + (distAlongLine * (GetWorldPointB() - GetWorldPointA()));
-                Vector2 axisOfCollision = pointOfCollision - other.GetOrigin();
-                Collision collision = new Collision(new CollisionPoint(pointOfCollision, this, other), axisOfCollision);
+                Vector2 axisOfCollision = other.GetOrigin() - pointOfCollision;
+                Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                 return collision;
             }
             else
@@ -161,31 +236,28 @@ namespace XNA_GameEngine.Physics.Colliders
                     else
                     {
                         Vector2 pointOfCollision = GetWorldPointA() + (distAlongLine * (GetWorldPointB() - GetWorldPointA()));
-                        Vector2 axisOfCollision = pointOfCollision - other.GetOrigin();
-                        Collision collision = new Collision(new CollisionPoint(pointOfCollision, this, other), axisOfCollision);
+                        Vector2 axisOfCollision = other.GetOrigin() - pointOfCollision;
+                        Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                         return collision;
                     }
                 }
                 // First point is on line
                 else
                 {
-                    Vector2 pointOfCollision = GetWorldPointA() + (distAlongLine * (GetWorldPointB() - GetWorldPointA()));
-                    Vector2 axisOfCollision = pointOfCollision - other.GetOrigin();
-                    Collision collision = new Collision(new CollisionPoint(pointOfCollision, this, other), axisOfCollision);
+                    Vector2 pointOfCollision1 = GetWorldPointA() + (distAlongLine * (GetWorldPointB() - GetWorldPointA()));
+                    Vector2 axisOfCollision = other.GetOrigin() - pointOfCollision1;
+                    Collision collision = new Collision(new CollisionPoint(pointOfCollision1, axisOfCollision, this, other));
                     distAlongLine = (-b - sqrt) / (2 * a);
                     // Second point is not on line
                     if (distAlongLine < 0 || distAlongLine > 1)
                     {
                         return collision;
                     }
-                    // TODO this is broken because of axis of collision
-                    /*
-                    pointOfCollision = GetWorldPointA() + (distAlongLine * (GetWorldPointB() - GetWorldPointA()));
-                    axisOfCollision = pointOfCollision - other.GetOrigin();
-                    collision.AddCollisionPoint(new CollisionPoint(pointOfCollision, this, other));
+                    
+                    Vector2 pointOfCollision2 = GetWorldPointA() + (distAlongLine * (GetWorldPointB() - GetWorldPointA()));
+                    Vector2 axisOfCollision2 = other.GetOrigin() - pointOfCollision2;
+                    collision.AddCollisionPoint(new CollisionPoint(pointOfCollision2, axisOfCollision2, this, other));
                     return collision;
-                     * */
-                    return null;
                 }
             }
         }
