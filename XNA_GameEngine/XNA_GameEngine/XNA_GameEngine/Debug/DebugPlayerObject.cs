@@ -41,7 +41,7 @@ namespace XNA_GameEngine.Debug
             base.Update(gameTime);
 
             // Get the net synch state for input.
-            NetSynchronizedInput synchronizedInput = NetworkManager.GetInstance().GetNetSynchronizedInput();
+            NetSynchronizedInput synchronizedInput = NetworkManager.GetInstance().GetNetSynchronizedInputState();
             if(synchronizedInput.IsLocalKeyDown(InputState.KeyboardStates.KEYBOARD_Up))
             {
                 m_vPosition.Y -= m_fSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;

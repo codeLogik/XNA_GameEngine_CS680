@@ -86,7 +86,7 @@ namespace XNA_GameEngine.Gameplay
                 {
                     coreComponent.Update(gameTime);
                 }
-            }
+            } 
         }
 
         public virtual void Render()

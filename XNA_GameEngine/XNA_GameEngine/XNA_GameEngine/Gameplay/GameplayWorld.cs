@@ -42,6 +42,20 @@ namespace XNA_GameEngine.Gameplay
             return m_frameNumber;
         }
 
+        public GameObject GetGameObjectOrNULL(Guid goRef)
+        {
+            // TODO @tom: Make more efficient!
+            GameObject go = null;
+            if (m_gameObjects.TryGetValue(goRef, out go))
+            {
+                return go;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public void AddGameObject(GameObject go)
         {
             if (go != null)

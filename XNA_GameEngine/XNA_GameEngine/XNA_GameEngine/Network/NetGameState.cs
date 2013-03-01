@@ -8,12 +8,12 @@ namespace XNA_GameEngine.Network
     [Serializable]
     class NetGameState : NetworkPacket
     {
-        public NetworkObject[] m_networkObjects;
+        public NetGOState[] m_netGOStates;
 
-        public NetGameState(NetworkObject[] networkObjects, UInt64 frameNumber)
+        public NetGameState(NetGOState[] netGOStates, UInt64 frameNumber)
             : base(frameNumber)
         {
-            m_networkObjects = networkObjects;
+            m_netGOStates = netGOStates;
         }
     }
 }
