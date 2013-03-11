@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -27,7 +28,9 @@ namespace XNA_GameEngine
 
         static public int MAX_PLAYERS = 4;
         static public int s_localPlayer = 0;
-        static public bool isServer = true;
+        static public bool isServer = false;
+        static public bool isObserver = true;
+        static public IPEndPoint serverEndpoint;
 
         public CoreMain()
         {
@@ -44,7 +47,7 @@ namespace XNA_GameEngine
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
             // Initialize the singleton component managers and worlds.
-            NetworkManager.GetInstance().Initialize("localhost", 8888);
+            NetworkManager.GetInstance().Initialize();
             PhysicsWorld.GetInstance().Initialize();
             GameplayWorld.GetInstance().Initialize();
             Renderer.GetInstance().Initialize(this, GraphicsDevice);
@@ -62,6 +65,7 @@ namespace XNA_GameEngine
             // Create a new SpriteBatch, which can be used to draw textures.
             Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
             playerObject.Initialize();
+            playerObject.SetRef(1);
             GameplayWorld.GetInstance().AddGameObject(playerObject);
 
             // TODO: use this.Content to load your game content here
@@ -93,6 +97,8 @@ namespace XNA_GameEngine
             NetworkManager.GetInstance().Update();
             PhysicsWorld.GetInstance().Update(gameTime);
             SoundManager.GetInstance().Update();
+
+            NetworkManager.GetInstance().PostUpdate();
 
             base.Update(gameTime);
         }

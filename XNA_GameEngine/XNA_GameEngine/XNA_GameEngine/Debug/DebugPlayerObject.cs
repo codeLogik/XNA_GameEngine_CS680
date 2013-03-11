@@ -33,7 +33,9 @@ namespace XNA_GameEngine.Debug
             // Add render component.
             String assetName = "debug_player";
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
+            Network.NetworkObject networkObject = new Network.NetworkObject(this);
             AddComponent(renderObject);
+            AddComponent(networkObject);
         }
 
         public override void Update(GameTime gameTime)

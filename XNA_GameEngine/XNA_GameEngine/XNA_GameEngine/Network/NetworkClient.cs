@@ -25,7 +25,7 @@ namespace XNA_GameEngine.Network
         public NetGameState GetNetGameState()
         {
             return m_receivedGameState;
-        }
+        } 
 
         public override void RunListenerThread()
         {

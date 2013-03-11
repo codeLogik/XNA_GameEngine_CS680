@@ -22,7 +22,12 @@ namespace XNA_GameEngine.Network
         public NetworkThread()
         {
             __senderSocket = new UdpClient();
-            __listenerSocket = new UdpClient(__LISTENER_PORT);
+
+            // TODO @tom: Remove after setting up working on different machines.
+            if (!CoreMain.isServer)
+            {
+                __listenerSocket = new UdpClient(__LISTENER_PORT);
+            }
         }
 
         public virtual void InitializeThread()
@@ -35,7 +40,12 @@ namespace XNA_GameEngine.Network
             try
             {
                 m_SenderThread.Start();
-                m_ListenerThread.Start();
+
+                // TODO @tom: Remove after setting up working on different machines.
+                if (!CoreMain.isServer)
+                {
+                    m_ListenerThread.Start();
+                }
                 Debug.DebugTools.Log("Network", "Threading", "Sender and Listeners threads started successfully");
             }
             catch (ThreadStateException e)

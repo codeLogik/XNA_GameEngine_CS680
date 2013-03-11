@@ -9,7 +9,7 @@ namespace XNA_GameEngine.Network
     class NetGOState : NetworkPacket
     {
         public NetworkDataTypes.NVec2 m_position;
-        public Guid m_goRef;
+        public /*Guid*/int m_goRef;
 
         public NetGOState(UInt64 currentFrame)
             : base(currentFrame)

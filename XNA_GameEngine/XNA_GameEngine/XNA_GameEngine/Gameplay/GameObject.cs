@@ -14,7 +14,8 @@ namespace XNA_GameEngine.Gameplay
         protected float m_fRotation;
         protected float m_fScale;
         protected ICoreComponent [] m_GOComponents;
-        Guid m_GORef;
+        //Guid m_GORef;
+        int m_GORef;
 
         public GameObject()
         {
@@ -72,9 +73,14 @@ namespace XNA_GameEngine.Gameplay
             m_fScale = scale;
         }
 
-        public Guid GetRef()
+        public /*Guid*/ int GetRef()
         {
             return m_GORef;
+        }
+
+        public void SetRef(int refNew)
+        {
+            m_GORef = refNew;
         }
 
         public virtual void Update(GameTime gameTime)
