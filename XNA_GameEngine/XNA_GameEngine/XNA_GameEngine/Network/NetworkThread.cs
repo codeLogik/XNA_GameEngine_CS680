@@ -24,10 +24,10 @@ namespace XNA_GameEngine.Network
             __senderSocket = new UdpClient();
 
             // TODO @tom: Remove after setting up working on different machines.
-            if (!CoreMain.isServer)
-            {
+            //if (!CoreMain.isServer)
+            //{
                 __listenerSocket = new UdpClient(__LISTENER_PORT);
-            }
+            //}
         }
 
         public virtual void InitializeThread()
