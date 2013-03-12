@@ -14,6 +14,8 @@ namespace XNA_GameEngine.Network
         // The game state received from the server.
         private NetGameState m_receivedGameState;
 
+        static object s_recGameStateLock = new object();
+
         private IPEndPoint serverEndPoint;
 
         public NetworkClient()
@@ -24,7 +26,10 @@ namespace XNA_GameEngine.Network
 
         public NetGameState GetNetGameState()
         {
-            return m_receivedGameState;
+            lock (s_recGameStateLock)
+            {
+                return m_receivedGameState;
+            }
         } 
 
         public override void RunListenerThread()
@@ -53,7 +58,10 @@ namespace XNA_GameEngine.Network
                 if (incomingGameState != null)
                 {
                     // Store the network game state for the network manager to process.
-                    m_receivedGameState = incomingGameState;
+                    lock (s_recGameStateLock)
+                    {
+                        m_receivedGameState = incomingGameState;
+                    }
                 }
             }
         }

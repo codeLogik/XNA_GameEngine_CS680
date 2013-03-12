@@ -116,6 +116,7 @@ namespace XNA_GameEngine.Network
                     {
                         // Update the network object for the go associated with this state.
                         NetworkObject netObject = m_GONetComponents[netGOstate.m_goRef];
+                        Debug.DebugTools.Report("[Network] (packet): NetGO Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
                         netObject.UpdateFromNetwork(netGOstate);
                     }
                 }
