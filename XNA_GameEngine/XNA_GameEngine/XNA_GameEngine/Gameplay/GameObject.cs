@@ -14,6 +14,7 @@ namespace XNA_GameEngine.Gameplay
         protected float m_fRotation;
         protected float m_fScale;
         protected ICoreComponent [] m_GOComponents;
+        protected int m_localPlayeID;
         //Guid m_GORef;
         int m_GORef;
 
@@ -23,6 +24,7 @@ namespace XNA_GameEngine.Gameplay
             m_vPosition = Vector2.Zero;
             m_fScale = 1.0f;
             m_fRotation = 0.0f;
+            m_localPlayeID = -1;
         }
 
         public virtual void Initialize()
@@ -93,6 +95,16 @@ namespace XNA_GameEngine.Gameplay
                     coreComponent.Update(gameTime);
                 }
             } 
+        }
+
+        public int GetPlayerID()
+        {
+            return m_localPlayeID;
+        }
+
+        public void SetPlayerID(int playerID)
+        {
+            m_localPlayeID = playerID;
         }
 
         public virtual void Render()

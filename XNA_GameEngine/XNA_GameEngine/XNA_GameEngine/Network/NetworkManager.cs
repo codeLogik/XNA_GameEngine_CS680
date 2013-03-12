@@ -5,6 +5,8 @@ using System.Text;
 using XNA_GameEngine.Core;
 using System.Net;
 
+using XNA_GameEngine.Gameplay;
+
 namespace XNA_GameEngine.Network
 {
     class NetworkManager
@@ -73,33 +75,26 @@ namespace XNA_GameEngine.Network
                 // Get the input states from the server thread and add into array of input states.
                 System.Diagnostics.Debug.Assert(networkThread is NetworkServer, "Server expects to have a network server thread!");
                 NetworkServer networkServer = (NetworkServer)networkThread;
-                LinkedList<NetInputState> netInputStates = null;
-                networkServer.GetReceivedInputStates(ref netInputStates);
+                LinkedList<NetGOState> netGOStates = null;
+                networkServer.GetReceivedGOStates(ref netGOStates);
 
 
-                InputState[] inputStates = new InputState[CoreMain.MAX_PLAYERS];
+                //InputState[] inputStates = new InputState[CoreMain.MAX_PLAYERS];
                 // TODO @tom: Should this check have to be here????
-                if (netInputStates != null)
+                if (netGOStates != null)
                 {
                     // Build the player array of network inputs.
-                    foreach (NetInputState netInputState in netInputStates)
+                    foreach (NetGOState netGOState in netGOStates)
                     {
-                        // If the input state has not been filled in yet for the player, then add it.  Otherwise
-                        // accumulate the input together for the multiple input states received for that player.
-                        UInt16 playerID = netInputState.m_playerID;
-                        if (inputStates[playerID] == null)
-                        {
-                            inputStates[playerID] = netInputState.m_inputState;
-                        }
-                        else
-                        {
-                            inputStates[playerID] = inputStates[playerID] + netInputState.m_inputState;
-                        }
+                        // Get the network object for the netGOState and update it.
+                        NetworkObject netObj = m_GONetComponents[netGOState.m_goRef];
+                        netObj.UpdateFromNetwork(netGOState);
                     }
                 }
 
                 // Update the network synchronized input with the newly received input states.
-                m_netSynchronizedInput.Update(inputStates);
+                //m_netSynchronizedInput.Update(inputStates);
+                m_netSynchronizedInput.UpdateLocalPlayer();
             }
             else //if(Client)
             {
@@ -120,6 +115,9 @@ namespace XNA_GameEngine.Network
                         netObject.UpdateFromNetwork(netGOstate);
                     }
                 }
+
+                // Update the local input state
+                m_netSynchronizedInput.UpdateLocalPlayer();
             }
         }
 
@@ -142,11 +140,21 @@ namespace XNA_GameEngine.Network
                 }
 
                 // Queue the new network game state for the network server.
-                networkServer.QueueSimulatedGameState(new NetGameState(netGOStates, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
+                networkServer.SendState(new NetGameState(netGOStates, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
             }
             else if(!CoreMain.isObserver)
             {
                 // TODO @tom: Handle sending local player state to the server.
+                GameObject playerGO = GameplayWorld.GetInstance().GetPlayerGameObjectOrNULL(CoreMain.s_localPlayer);
+                NetworkObject netObj = (NetworkObject)playerGO.GetComponentByTypeOrNULL(ICoreComponent.ComponentType.COMPONENT_Networking);
+                NetGOState netGOstate = netObj.GetNetState();
+
+                // Send the state to the server
+                // Get the network game state from the client thread.
+                System.Diagnostics.Debug.Assert(networkThread is NetworkClient, "Client expects to have a network client thread!");
+                NetworkClient netClient = (NetworkClient)networkThread;
+
+                netClient.SendState(netGOstate);
             }
         }
 

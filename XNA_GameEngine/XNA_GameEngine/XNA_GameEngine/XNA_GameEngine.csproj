@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Core\CoreComponent.cs" />
     <Compile Include="Debug\DebugPlayerObject.cs" />
+    <Compile Include="Debug\DebugPlayerRemoteObject.cs" />
     <Compile Include="Debug\DebugTools.cs" />
     <Compile Include="Gameplay\GameObject.cs" />
     <Compile Include="Gameplay\GameplayWorld.cs" />
