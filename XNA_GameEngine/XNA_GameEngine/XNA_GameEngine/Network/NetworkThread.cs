@@ -33,19 +33,19 @@ namespace XNA_GameEngine.Network
         public virtual void InitializeThread()
         {
             // Start the uplink and downlink threads.
-            //m_SenderThread = new Thread(new ThreadStart(RunSenderThread));
+            m_SenderThread = new Thread(new ThreadStart(RunSenderThread));
             m_ListenerThread = new Thread(new ThreadStart(RunListenerThread));
 
             // Start the threads.
             try
             {
-               // m_SenderThread.Start();
+                m_SenderThread.Start();
 
                 // TODO @tom: Remove after setting up working on different machines.
-                //if (!CoreMain.isServer)
-                //{
+                if (!CoreMain.isServer)
+                {
                     m_ListenerThread.Start();
-                //}
+                }
                 Debug.DebugTools.Log("Network", "Threading", "Sender and Listeners threads started successfully");
             }
             catch (ThreadStateException e)
@@ -59,7 +59,7 @@ namespace XNA_GameEngine.Network
             // Shut down the threads.
             try
             {
-                //m_SenderThread.Abort();
+                m_SenderThread.Abort();
             }
             catch(ThreadAbortException)
             {
@@ -78,8 +78,6 @@ namespace XNA_GameEngine.Network
 
         public abstract void RunListenerThread();
         public abstract void RunSenderThread();
-
-        public abstract void SendState(NetworkPacket networkPacket);
 
         public void SendPacket(byte[] packet, IPEndPoint remoteEndpoint)
         {

@@ -7,8 +7,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.IO;
 
-using XNA_GameEngine.Gameplay;
-
 namespace XNA_GameEngine.Network
 {
     class NetworkClient : NetworkThread
@@ -23,7 +21,7 @@ namespace XNA_GameEngine.Network
         public NetworkClient()
             : base()
         {
-            serverEndPoint = CoreMain.serverEndpoint;
+            serverEndPoint = null;
         }
 
         public NetGameState GetNetGameState()
@@ -71,32 +69,6 @@ namespace XNA_GameEngine.Network
         public override void RunSenderThread()
         {
             // TODO @tom: This needs to be implemented for sending the state up to the server.
-            GameObject go = GameplayWorld.GetInstance().GetPlayerGameObjectOrNULL(CoreMain.s_localPlayer);
-
-            //if(go != null)
-            //{
-            //    NetGOState netGOstate = go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Networking);
-        }
-
-        public override void SendState(NetworkPacket networkPacket)
-        {
-            if (networkPacket is NetGOState)
-            {
-                NetGOState netGOstate = (NetGOState)networkPacket;
-                MemoryStream memStream = new MemoryStream();
-                BinaryFormatter formatter = new BinaryFormatter();
-                try
-                {
-                    formatter.Serialize(memStream, netGOstate);
-                }
-                catch (SerializationException e)
-                {
-                    Debug.DebugTools.Report("[Network] (serialization): " + e.Message);
-                }
-
-                SendPacket(memStream.GetBuffer(), serverEndPoint);
-                //Debug.DebugTools.Report("[Network] (packet): Successfully sent " + memStream.GetBuffer().Count() + " bytes");
-            }
         }
     }
 }

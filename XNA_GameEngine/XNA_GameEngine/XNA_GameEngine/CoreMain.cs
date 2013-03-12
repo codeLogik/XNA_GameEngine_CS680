@@ -63,20 +63,10 @@ namespace XNA_GameEngine
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject("debug_player");
+            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
             playerObject.Initialize();
             playerObject.SetRef(1);
-            playerObject.SetPlayerID(0);
-            //playerObject.SetPlayerID();
             GameplayWorld.GetInstance().AddGameObject(playerObject);
-
-            Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject("debug_player2");
-            playerObject2.Initialize();
-            playerObject2.SetRef(2);
-            playerObject2.SetPlayerID(1);
-            playerObject2.SetPosition(new Vector2(180.0f, 180.0f));
-            //playerObject.SetPlayerID();
-            GameplayWorld.GetInstance().AddGameObject(playerObject2);
 
             // TODO: use this.Content to load your game content here
         }
