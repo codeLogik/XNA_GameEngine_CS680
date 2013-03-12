@@ -33,15 +33,6 @@ namespace XNA_GameEngine
                         CoreMain.serverEndpoint = ep;
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a client");
                     }
-                    else if (args[0].Equals("observer"))
-                    {
-                        CoreMain.isServer = false;
-                        CoreMain.s_localPlayer = -1;
-                        IPAddress ip = IPAddress.Parse(args[1]);
-                        IPEndPoint ep = new IPEndPoint(ip, 8888);
-                        CoreMain.serverEndpoint = ep;
-                        Debug.DebugTools.Report("[Program] (initialization): Starting as a observer");
-                    }
                 }
                 else
                 {
