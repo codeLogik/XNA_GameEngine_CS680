@@ -10,15 +10,6 @@
       <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player.xnb</Output>
       <Time>2013-02-25T23:38:53.0500362-08:00</Time>
     </Item>
-    <Item>
-      <Source>debug_player2.bmp</Source>
-      <Name>debug_player2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player2.xnb</Output>
-      <Time>2013-03-11T21:53:31.0778466-07:00</Time>
-    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>

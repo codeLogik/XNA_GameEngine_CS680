@@ -5,4 +5,3 @@ C:\Users\tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine
 C:\Users\tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\obj\x86\Debug\XNA_GameEngine.exe
 C:\Users\tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\obj\x86\Debug\XNA_GameEngine.pdb
 C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player.xnb
-C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player2.xnb

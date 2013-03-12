@@ -17,7 +17,7 @@ namespace XNA_GameEngine.Network
         public Dictionary<IPAddress, int> m_playerToIPMap;
 
         // Network input states
-        private LinkedList<NetGOState> m_receivedGOStates;
+        private LinkedList<NetInputState> m_receivedInputStates;
         
         // Network game state to be broadcast to the clients and observers.
         private NetGameState m_simulatedGameState;
@@ -31,7 +31,7 @@ namespace XNA_GameEngine.Network
             : base()
         {
             m_remoteIPEndpoints = new LinkedList<IPEndPoint>();
-            m_receivedGOStates = new LinkedList<NetGOState>();
+            m_receivedInputStates = new LinkedList<NetInputState>();
             m_playerToIPMap = new Dictionary<IPAddress, int>();
 
             IPAddress ip = IPAddress.Parse("192.168.1.85");
@@ -51,12 +51,12 @@ namespace XNA_GameEngine.Network
             m_remoteIPEndpoints.Clear();
         }
 
-        public void GetReceivedGOStates(ref LinkedList<NetGOState> recNetGOStates)
+        public void GetReceivedInputStates(ref LinkedList<NetInputState> recNetInputStates)
         {
             lock (s_lockNetSyncInput)
             {
-                recNetGOStates = m_receivedGOStates;
-                m_receivedGOStates = null;
+                recNetInputStates = m_receivedInputStates;
+                m_receivedInputStates = null;
             }
         }
 
@@ -108,31 +108,6 @@ namespace XNA_GameEngine.Network
             }
         }
 
-        public override void SendState(NetworkPacket networkPacket)
-        {
-            if (networkPacket is NetGameState)
-            {
-                NetGameState netGameState = (NetGameState)networkPacket;
-
-                MemoryStream memStream = new MemoryStream();
-                BinaryFormatter formatter = new BinaryFormatter();
-                try
-                {
-                    formatter.Serialize(memStream, netGameState);
-                }
-                catch (SerializationException e)
-                {
-                    Debug.DebugTools.Report("[Network] (serialization): " + e.Message);
-                }
-
-                foreach (IPEndPoint remoteEndPoint in m_remoteIPEndpoints)
-                {
-                    SendPacket(memStream.GetBuffer(), remoteEndPoint);
-                    //Debug.DebugTools.Report("[Network] (packet): Successfully sent " + memStream.GetBuffer().Count() + " bytes");
-                }
-            }
-        }
-
         public override void RunListenerThread()
         {
             // TODO @tom: This is the loop that runs so long as the server state is not disconnect.
@@ -148,13 +123,13 @@ namespace XNA_GameEngine.Network
                 byte[] packet = GetPacket(ref incomingEndPoint);
 
                 // Extract the input packet we are waiting for.
-                NetGOState incomingGOState = null;
+                NetInputState incomingInputState = null;
                 MemoryStream memStream = new MemoryStream(packet);
                 BinaryFormatter formatter = new BinaryFormatter();
                 try
                 {
                     Object obj = formatter.Deserialize(memStream);
-                    incomingGOState = (NetGOState)obj;
+                    incomingInputState = (NetInputState)obj;
                 }
                 catch (SerializationException e)
                 {
@@ -162,9 +137,9 @@ namespace XNA_GameEngine.Network
                 }
 
                 // If we successfully got the packet and deserialized correctly then queue it to be processed by the network manager.
-                if (incomingGOState != null)
+                if (incomingInputState != null)
                 {
-                    m_receivedGOStates.AddLast(incomingGOState);
+                    m_receivedInputStates.AddLast(incomingInputState);
                 }
             }
         }

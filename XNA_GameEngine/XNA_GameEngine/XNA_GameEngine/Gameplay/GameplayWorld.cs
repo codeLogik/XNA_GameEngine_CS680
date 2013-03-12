@@ -10,7 +10,6 @@ namespace XNA_GameEngine.Gameplay
     class GameplayWorld
     {
         private Dictionary</*Guid*/int, GameObject> m_gameObjects;
-        private Dictionary<int, GameObject> m_playerGO;
 
         // Simulation tick count.
         UInt64 m_frameNumber;
@@ -21,7 +20,6 @@ namespace XNA_GameEngine.Gameplay
         public GameplayWorld()
         {
             m_gameObjects = new Dictionary</*Guid*/int, GameObject>();
-            m_playerGO = new Dictionary<int, GameObject>();
         }
 
         public void Initialize()
@@ -58,19 +56,6 @@ namespace XNA_GameEngine.Gameplay
             }
         }
 
-        public GameObject GetPlayerGameObjectOrNULL(int playerID)
-        {
-            GameObject go = null;
-            if (m_playerGO.TryGetValue(playerID, out go))
-            {
-                return go;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public void AddGameObject(GameObject go)
         {
             if (go != null)
@@ -83,9 +68,6 @@ namespace XNA_GameEngine.Gameplay
                 Network.NetworkManager.GetInstance().AddNetworkObject(go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Networking));
                 Rendering.Renderer.GetInstance().AddRenderObject(go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Rendering));
                 Physics.PhysicsWorld.GetInstance().AddPhysicsObject(go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Physics));
-
-                // Add to the player map if this is a player object.
-
             }
         }
 
