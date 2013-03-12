@@ -34,7 +34,7 @@ namespace XNA_GameEngine.Network
             m_receivedGOStates = new LinkedList<NetGOState>();
             m_playerToIPMap = new Dictionary<IPAddress, int>();
 
-            IPAddress ip = IPAddress.Parse("192.168.1.39");
+            IPAddress ip = IPAddress.Parse("192.168.1.85");
             IPEndPoint ep = new IPEndPoint(ip, 8888);
             m_remoteIPEndpoints.AddFirst(ep);
         }
