@@ -18,12 +18,12 @@ namespace XNA_GameEngine
                 // Gather command line arguements for whether we are the server or client instance.
                 if (args.Length > 0)
                 {
-                    if(args[0].Equals("server"))
+                    if (args[0].Equals("server"))
                     {
                         CoreMain.isServer = true;
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a server");
                     }
-                    else if(args[0].Equals("client"))
+                    else if (args[0].Equals("client"))
                     {
                         CoreMain.isServer = false;
                         IPAddress ip = IPAddress.Parse(args[1]);
@@ -31,6 +31,11 @@ namespace XNA_GameEngine
                         CoreMain.serverEndpoint = ep;
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a client");
                     }
+                }
+                else
+                {
+                    CoreMain.isServer = true;
+                    Debug.DebugTools.Report("[Program] (initialization): Starting as a server");
                 }
                 game.Run();
             }
