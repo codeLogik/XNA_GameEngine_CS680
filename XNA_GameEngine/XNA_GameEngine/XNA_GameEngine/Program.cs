@@ -21,11 +21,13 @@ namespace XNA_GameEngine
                     if (args[0].Equals("server"))
                     {
                         CoreMain.isServer = true;
+                        CoreMain.s_localPlayer = 0;
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a server");
                     }
                     else if (args[0].Equals("client"))
                     {
                         CoreMain.isServer = false;
+                        CoreMain.s_localPlayer = 1;
                         IPAddress ip = IPAddress.Parse(args[1]);
                         IPEndPoint ep = new IPEndPoint(ip, 8888);
                         CoreMain.serverEndpoint = ep;
@@ -35,6 +37,7 @@ namespace XNA_GameEngine
                 else
                 {
                     CoreMain.isServer = true;
+                    CoreMain.s_localPlayer = 0;
                     Debug.DebugTools.Report("[Program] (initialization): Starting as a server");
                 }
                 game.Run();

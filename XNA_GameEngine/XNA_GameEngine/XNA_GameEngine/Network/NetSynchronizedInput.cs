@@ -31,6 +31,12 @@ namespace XNA_GameEngine.Network
             }
         }
 
+        public void UpdateLocalPlayer()
+        {
+            m_localInput.Update();
+            m_synchronizedStates[XNA_GameEngine.CoreMain.s_localPlayer] = m_localInput.GetLocalInputState();
+        }
+
         public void Update(InputState[] inputStates)
         {
             // Gather the synchronized input of the networked players and the local player.
