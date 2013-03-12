@@ -85,7 +85,10 @@ namespace XNA_GameEngine.Gameplay
                 Physics.PhysicsWorld.GetInstance().AddPhysicsObject(go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Physics));
 
                 // Add to the player map if this is a player object.
-
+                if (go.GetPlayerID() >= 0)
+                {
+                    m_playerGO.Add(go.GetPlayerID(), go);
+                }
             }
         }
 

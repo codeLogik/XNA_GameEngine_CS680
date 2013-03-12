@@ -111,7 +111,10 @@ namespace XNA_GameEngine.Network
                     {
                         // Update the network object for the go associated with this state.
                         NetworkObject netObject = m_GONetComponents[netGOstate.m_goRef];
-                        Debug.DebugTools.Report("[Network] (packet): NetGO Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
+                        if (netObject.GetParent().GetPlayerID() == CoreMain.s_localPlayer)
+                        {
+                            Debug.DebugTools.Report("[Network] (packet): NetGO Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
+                        }
                         netObject.UpdateFromNetwork(netGOstate);
                     }
                 }
@@ -135,8 +138,7 @@ namespace XNA_GameEngine.Network
                 NetGOState[] netGOStates = new NetGOState[goNetObjects.Count];
                 for (int i = 0; i < goNetObjects.Count; i++)
                 {
-                    goNetObjects[i].Update(null);
-                    netGOStates[i] = goNetObjects[i].GetNetState();
+                    netGOStates[i] = goNetObjects[i].GetCurrentNetState();
                 }
 
                 if (GameplayWorld.GetInstance().GetCurrentFrameNumber() % 10 == 0)
@@ -150,7 +152,7 @@ namespace XNA_GameEngine.Network
                 // TODO @tom: Handle sending local player state to the server.
                 GameObject playerGO = GameplayWorld.GetInstance().GetPlayerGameObjectOrNULL(CoreMain.s_localPlayer);
                 NetworkObject netObj = (NetworkObject)playerGO.GetComponentByTypeOrNULL(ICoreComponent.ComponentType.COMPONENT_Networking);
-                NetGOState netGOstate = netObj.GetNetState();
+                NetGOState netGOstate = netObj.GetCurrentNetState();
 
                 // Send the state to the server
                 // Get the network game state from the client thread.
@@ -158,6 +160,10 @@ namespace XNA_GameEngine.Network
                 NetworkClient netClient = (NetworkClient)networkThread;
 
                 netClient.SendState(netGOstate);
+                if (netObj.GetParent().GetPlayerID() == CoreMain.s_localPlayer)
+                {
+                    Debug.DebugTools.Report("[Network] (packet): NetGO sent Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
+                }
             }
         }
 

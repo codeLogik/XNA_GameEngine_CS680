@@ -36,8 +36,10 @@ namespace XNA_GameEngine.Network
             m_ownerGO.SetPosition(netGOstate.m_position.GetVector2());
         }
 
-        public NetGOState GetNetState()
+        public NetGOState GetCurrentNetState()
         {
+            // Update the network object and return it.
+            Update(null);
             return m_netState;
         }
     }
