@@ -139,8 +139,11 @@ namespace XNA_GameEngine.Network
                     netGOStates[i] = goNetObjects[i].GetNetState();
                 }
 
-                // Queue the new network game state for the network server.
-                networkServer.SendState(new NetGameState(netGOStates, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
+                if (GameplayWorld.GetInstance().GetCurrentFrameNumber() % 10 == 0)
+                {
+                    // Queue the new network game state for the network server.
+                    networkServer.SendState(new NetGameState(netGOStates, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
+                }
             }
             else if(!CoreMain.isObserver)
             {

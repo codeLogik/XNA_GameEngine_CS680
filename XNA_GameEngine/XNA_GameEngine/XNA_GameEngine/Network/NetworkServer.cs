@@ -34,7 +34,7 @@ namespace XNA_GameEngine.Network
             m_receivedGOStates = new LinkedList<NetGOState>();
             m_playerToIPMap = new Dictionary<IPAddress, int>();
 
-            IPAddress ip = IPAddress.Parse("192.168.1.85");
+            IPAddress ip = IPAddress.Parse("192.168.1.39");
             IPEndPoint ep = new IPEndPoint(ip, 8888);
             m_remoteIPEndpoints.AddFirst(ep);
         }
@@ -101,10 +101,11 @@ namespace XNA_GameEngine.Network
                     foreach (IPEndPoint remoteEndPoint in m_remoteIPEndpoints)
                     {
                          SendPacket(memStream.GetBuffer(), remoteEndPoint);
-                        //Debug.DebugTools.Report("[Network] (packet): Successfully sent " + memStream.GetBuffer().Count() + " bytes");
+                        Debug.DebugTools.Report("[Network] (packet): Successfully sent " + memStream.GetBuffer().Count() + " bytes");
                     }
                 }
-                
+
+                //Thread.Sleep(200);
             }
         }
 
