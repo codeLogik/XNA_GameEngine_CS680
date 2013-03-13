@@ -32,6 +32,8 @@ namespace XNA_GameEngine
         public CoreMain()
         {
             m_graphics = new GraphicsDeviceManager(this);
+            m_graphics.PreferredBackBufferHeight = 680;
+            m_graphics.PreferredBackBufferWidth = 960;
             Content.RootDirectory = "Content";
         }
 
@@ -46,6 +48,7 @@ namespace XNA_GameEngine
             // Initialize the singleton component managers and worlds.
             NetworkManager.GetInstance().Initialize();
             PhysicsWorld.GetInstance().Initialize();
+            PhysicsWorld.GetInstance().SetGravity(new Vector2(0.0f, 100.0f));
             GameplayWorld.GetInstance().Initialize();
             Renderer.GetInstance().Initialize(this, GraphicsDevice);
             SoundManager.GetInstance().Initialize();
@@ -61,11 +64,29 @@ namespace XNA_GameEngine
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject("debug_player");
+            Debug.DebugColliderObject collider = new Debug.DebugColliderObject();
+            Debug.DebugColliderObject2 collider2 = new Debug.DebugColliderObject2();
+            Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
+            Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
+            Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();
+            Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
             playerObject.Initialize();
+            collider.Initialize();
+            collider2.Initialize();
+            bottom.Initialize();
+            top.Initialize();
+            left.Initialize();
+            right.Initialize();
             playerObject.SetRef(1);
             playerObject.SetPlayerID(0);
             //playerObject.SetPlayerID();
             GameplayWorld.GetInstance().AddGameObject(playerObject);
+            GameplayWorld.GetInstance().AddGameObject(collider);
+            GameplayWorld.GetInstance().AddGameObject(collider2);
+            GameplayWorld.GetInstance().AddGameObject(left);
+            GameplayWorld.GetInstance().AddGameObject(right);
+            GameplayWorld.GetInstance().AddGameObject(bottom);
+            GameplayWorld.GetInstance().AddGameObject(top);
 
             Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject("debug_player2");
             playerObject2.Initialize();
@@ -74,6 +95,7 @@ namespace XNA_GameEngine
             playerObject2.SetPosition(new Vector2(180.0f, 180.0f));
             //playerObject.SetPlayerID();
             GameplayWorld.GetInstance().AddGameObject(playerObject2);
+
 
             // TODO: use this.Content to load your game content here
         }

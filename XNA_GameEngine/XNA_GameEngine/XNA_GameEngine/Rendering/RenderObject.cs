@@ -37,8 +37,8 @@ namespace XNA_GameEngine.Rendering
         public override void Update(GameTime gameTime)
         {
             // TODO @tom: Add logic to convert the world position into render position.
-            m_renderPosition.X = m_ownerGO.GetPosition().X;
-            m_renderPosition.Y = m_ownerGO.GetPosition().Y;
+            m_renderPosition.X = m_ownerGO.GetPosition().X - (m_sprite.Width / 2.0f);
+            m_renderPosition.Y = m_ownerGO.GetPosition().Y - (m_sprite.Height / 2.0f);
 
             m_fScale = m_ownerGO.GetScale();
         }
