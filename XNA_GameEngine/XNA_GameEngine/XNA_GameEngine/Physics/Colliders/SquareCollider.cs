@@ -178,8 +178,10 @@ namespace XNA_GameEngine.Physics.Colliders
             }
             if (p == 1)
             {
+                XNA_GameEngine.Debug.DebugTools.Report("Only One point!");
                 Vector2 location = collisionPoints[0];
-                Vector2 axisOfCollision = base.TransformToWorld(m_sideNormals[collidingEdge]);
+                Matrix rotation = Matrix.CreateRotationZ((float)GetParent().GetParent().GetRotation());
+                Vector2 axisOfCollision = Vector2.Transform(m_sideNormals[collidingEdge], rotation);
 
                 Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
                 return collision;

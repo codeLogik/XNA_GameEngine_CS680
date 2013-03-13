@@ -50,7 +50,7 @@ namespace XNA_GameEngine.Physics.Colliders
             Vector2 otherPointB = other.TransformToWorld(other.m_vRelativePointB);
 
             float denominator = (otherPointB.Y - otherPointA.Y) * (myPointB.X - myPointA.X) - (otherPointB.X - otherPointA.X) * (myPointB.Y - myPointA.Y);
-            if (denominator == 0)
+            if (Math.Abs(denominator) <= 0.00001f)
             {
                 return null;
             }

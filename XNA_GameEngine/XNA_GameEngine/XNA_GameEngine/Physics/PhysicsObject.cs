@@ -130,11 +130,11 @@ namespace XNA_GameEngine.Physics
                     // Apply impulse
                     m_vVelocity += (impulseVector / m_fMass);
                     physObj.m_vVelocity -= (impulseVector / physObj.m_fMass);
-
+                    /*
                     XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
                     XNA_GameEngine.Debug.DebugTools.Report("Point of Collisin: " + pointOfCollision);
                     XNA_GameEngine.Debug.DebugTools.Report("Impulse Vector: " + impulseVector);
-
+                    */
                     Vector2 originToCollision = pointOfCollision - GetParent().GetPosition();
                     double crossProduct = impulseVector.X * originToCollision.Y - impulseVector.Y * originToCollision.X;
                     m_fAngularVelocity -= (float) (crossProduct / m_collider.GetMomentOfInertia(m_fMass));
