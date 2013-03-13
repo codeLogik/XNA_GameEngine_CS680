@@ -12,18 +12,18 @@ namespace XNA_GameEngine.Physics.Colliders
     {
         protected Vector2[] m_vertices;
         protected Vector2[] m_sideNormals;
-        protected float m_vSize;
+        protected Vector2 m_vSize;
 
-        public SquareCollider(float size)
+        public SquareCollider(Vector2 size)
         {
-            float halfSize = size / 2;
+            Vector2 halfSize = size / 2.0f;
 
             // Vertices in counter-clockwise order.
             m_vertices = new Vector2[] {
-                new Vector2(halfSize, -halfSize),
-                new Vector2(-halfSize, -halfSize),
-                new Vector2(-halfSize, halfSize),
-                new Vector2(halfSize, halfSize)
+                new Vector2(halfSize.X, -halfSize.Y),
+                new Vector2(-halfSize.X, -halfSize.Y),
+                new Vector2(-halfSize.X, halfSize.Y),
+                new Vector2(halfSize.X, halfSize.Y)
             };
 
             m_sideNormals = new Vector2[4];
@@ -35,7 +35,9 @@ namespace XNA_GameEngine.Physics.Colliders
                     j = 0;
                 }
                 Vector2 sideDirection = m_vertices[j] - m_vertices[i];
-                sideDirection.Y = -sideDirection.Y;
+                float tempX = sideDirection.X;
+                sideDirection.X = sideDirection.Y;
+                sideDirection.Y = -tempX;
                 sideDirection.Normalize();
                 m_sideNormals[i] = sideDirection;
             }
@@ -43,14 +45,14 @@ namespace XNA_GameEngine.Physics.Colliders
             m_vSize = size;
         }
 
-        public float GetSize()
+        public Vector2 GetSize()
         {
             return m_vSize;
         }
 
         public override float GetMomentOfInertia(float mass)
         {
-            return mass * (m_vSize * m_vSize + m_vSize + m_vSize) / 12.0f;
+            return mass * (m_vSize.X * m_vSize.X + m_vSize.Y + m_vSize.Y) / 12.0f;
         }
         
         public override Collision CollidesWith(SquareCollider other)
@@ -129,29 +131,57 @@ namespace XNA_GameEngine.Physics.Colliders
                 return null;
             }
 
-            Vector2 squareOrigin = GetParent().GetParent().GetPosition();
-            Vector2 linePA = other.TransformToWorld(other.GetLocalA());
-            Vector2 linePB = other.TransformToWorld(other.GetLocalB());
+            LineCollider[] mySides = new LineCollider[] {
+                new LineCollider(m_vertices[0], m_vertices[1]),
+                new LineCollider(m_vertices[1], m_vertices[2]),
+                new LineCollider(m_vertices[2], m_vertices[3]),
+                new LineCollider(m_vertices[3], m_vertices[0])
+            };
 
-            Vector2 toPointA = linePA - squareOrigin;
-            Vector2 dirLine = linePB - linePA;
-            dirLine.Normalize();
-
-            Vector2 perpToLine = toPointA - (dirLine * Vector2.Dot(toPointA, dirLine));
-
-            Matrix matrix = Matrix.CreateRotationZ(-((float)GetParent().GetParent().GetRotation()));
-            Vector2 rotatedDirection = Vector2.Transform(perpToLine, matrix);
-
-            float halfSize = m_vSize / 2.0f;
-            Vector2 pointOnRectangle = Vector2.Max(rotatedDirection, new Vector2(-halfSize, -halfSize));
-            pointOnRectangle = Vector2.Min(pointOnRectangle, new Vector2(halfSize, halfSize));
-
-            if (perpToLine.LengthSquared() <= pointOnRectangle.LengthSquared())
+            // Make sure the LineColliders can transform and rotate their points to the world coordinates
+            for (int i = 0; i < 4; i++)
             {
-                pointOnRectangle = base.TransformToWorld(pointOnRectangle);
-                Vector2 axisOfCollision = -perpToLine;
-                axisOfCollision.Normalize();
-                Collision collision = new Collision(new CollisionPoint(pointOnRectangle, axisOfCollision, this, other));
+                mySides[i].SetParent(GetParent());
+            }
+
+            Vector2[] collisionPoints = new Vector2[2];
+            int p = 0;
+            int collidingEdge = -1;
+            for (int i = 0; i < 4; i++)
+            {
+                Collision thisCollision = mySides[i].CollidesWith(other);
+                if (thisCollision != null)
+                {
+                    collidingEdge = i;
+                    collisionPoints[p] = thisCollision.GetCollisionPoint().WorldLocation;
+                    p++;
+                    
+                    // A line can only intersect with a square at most at 2 places
+                    if (p == 2)
+                    {
+                        Vector2 location = (collisionPoints[0] + collisionPoints[1]) / 2;
+                        Vector2 axisOfCollision = collisionPoints[1] - collisionPoints[0];
+
+                        float tempX = axisOfCollision.X;
+                        axisOfCollision.X = -axisOfCollision.Y;
+                        axisOfCollision.Y = tempX;
+                        axisOfCollision.Normalize();
+                        Vector2 outOfSelf = location - GetParent().GetParent().GetPosition();
+                        if (Vector2.Dot(axisOfCollision, outOfSelf) < 0)
+                        {
+                            axisOfCollision = -axisOfCollision;
+                        }
+                        Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
+                        return collision;
+                    }
+                }
+            }
+            if (p == 1)
+            {
+                Vector2 location = collisionPoints[0];
+                Vector2 axisOfCollision = base.TransformToWorld(m_sideNormals[collidingEdge]);
+
+                Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
                 return collision;
             }
             return null;

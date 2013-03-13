@@ -78,6 +78,7 @@ namespace XNA_GameEngine.Physics.Colliders
                 }
                 Vector2 pointOfCollision = other.TransformToWorld(other.GetLocalA()) + (distAlongLine * (other.TransformToWorld(other.GetLocalB()) - other.TransformToWorld(other.GetLocalA())));
                 Vector2 axisOfCollision = pointOfCollision - myWorldOrigin;
+                axisOfCollision.Normalize();
                 Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                 return collision;
             }
@@ -100,6 +101,7 @@ namespace XNA_GameEngine.Physics.Colliders
                     {
                         Vector2 pointOfCollision = other.TransformToWorld(other.GetLocalA()) + (distAlongLine * (other.TransformToWorld(other.GetLocalB()) - other.TransformToWorld(other.GetLocalA())));
                         Vector2 axisOfCollision = pointOfCollision - myWorldOrigin;
+                        axisOfCollision.Normalize();
                         Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                         return collision;
                     }
@@ -113,11 +115,13 @@ namespace XNA_GameEngine.Physics.Colliders
                     // Second point is not on line
                     if (distAlongLine < 0 || distAlongLine > 1)
                     {
+                        axisOfCollision.Normalize();
                         Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                         return collision;
                     }
                     pointOfCollision = (pointOfCollision + other.TransformToWorld(other.GetLocalA()) + (distAlongLine * (other.TransformToWorld(other.GetLocalB()) - other.TransformToWorld(other.GetLocalA())))) / 2.0f;
                     axisOfCollision = pointOfCollision - myWorldOrigin;
+                    axisOfCollision.Normalize();
                     Collision averageCollision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                     return averageCollision;
                 }

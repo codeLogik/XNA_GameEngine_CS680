@@ -20,11 +20,11 @@ namespace XNA_GameEngine.Debug
 
             m_fScale = 1.0f;
             m_fRotation = 0.0f;
-            m_vPosition = new Vector2(0.0f, 680.0f);
+            m_vPosition = new Vector2(0.1f, 680.0f);
 
             // Add render component.
-            Physics.Colliders.LineCollider collider = new Physics.Colliders.LineCollider(new Vector2(0.0f, 0.0f), new Vector2(960.0f, 0.0f));
-            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 1000000000000.0f, collider);
+            Physics.Colliders.LineCollider collider = new Physics.Colliders.LineCollider(Vector2.Zero, new Vector2(959.8f, 0.0f));
+            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, float.MaxValue, collider);
             physicsObject.SetElasticity(0.8f);
             physicsObject.Immobilize();
             AddComponent(physicsObject);
