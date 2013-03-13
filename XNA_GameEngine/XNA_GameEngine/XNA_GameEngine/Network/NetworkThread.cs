@@ -19,14 +19,14 @@ namespace XNA_GameEngine.Network
         private UdpClient __senderSocket;
         private UdpClient __listenerSocket;
 
-        public NetworkThread()
+        public NetworkThread(int listenerPort)
         {
             __senderSocket = new UdpClient();
 
             // TODO @tom: Remove after setting up working on different machines.
             //if (!CoreMain.isServer)
             //{
-                __listenerSocket = new UdpClient(__LISTENER_PORT);
+                __listenerSocket = new UdpClient(listenerPort);
             //}
         }
 

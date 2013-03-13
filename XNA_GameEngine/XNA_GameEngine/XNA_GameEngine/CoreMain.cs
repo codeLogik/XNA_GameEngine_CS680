@@ -28,10 +28,7 @@ namespace XNA_GameEngine
 
         static public int MAX_PLAYERS = 4;
         static public int s_localPlayer = 0;
-        static public bool isServer = false;
-        static public bool isObserver = true;
-        static public IPEndPoint serverEndpoint;
-
+        
         public CoreMain()
         {
             m_graphics = new GraphicsDeviceManager(this);

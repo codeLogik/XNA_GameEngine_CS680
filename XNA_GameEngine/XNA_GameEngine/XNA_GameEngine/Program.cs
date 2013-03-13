@@ -11,44 +11,43 @@ namespace XNA_GameEngine
         /// </summary>
         static void Main(string[] args)
         {
-            
-
             using (CoreMain game = new CoreMain())
             {
                 // Gather command line arguements for whether we are the server or client instance.
-                if (args.Length > 0)
+                if (args.Length == 2)
                 {
+                    System.Console.WriteLine("Number of args: " + args.Length);
                     if (args[0].Equals("server"))
                     {
-                        CoreMain.isServer = true;
-                        CoreMain.isObserver = false;
+                        Network.NetworkParams.isServer = true;
+                        Network.NetworkParams.isObserver = false;
                         CoreMain.s_localPlayer = 0;
+                        IPAddress clientIP = IPAddress.Parse(args[1]);
+                        Network.NetworkParams.clientEndpoint = new IPEndPoint(clientIP, Network.NetworkParams.CLIENT_LISTENER_PORT);
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a server");
                     }
                     else if (args[0].Equals("client"))
                     {
-                        CoreMain.isServer = false;
-                        CoreMain.isObserver = false;
+                        Network.NetworkParams.isServer = false;
+                        Network.NetworkParams.isObserver = false;
                         CoreMain.s_localPlayer = 1;
-                        IPAddress ip = IPAddress.Parse(args[1]);
-                        IPEndPoint ep = new IPEndPoint(ip, 8888);
-                        CoreMain.serverEndpoint = ep;
+                        IPAddress serverIP = IPAddress.Parse(args[1]);
+                        Network.NetworkParams.serverEndpoint = new IPEndPoint(serverIP, Network.NetworkParams.SERVER_LISTENER_PORT);
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a client");
                     }
                     else if (args[0].Equals("observer"))
                     {
-                        CoreMain.isServer = false;
+                        Network.NetworkParams.isServer = false;
                         CoreMain.s_localPlayer = -1;
-                        CoreMain.isObserver = true;
-                        IPAddress ip = IPAddress.Parse(args[1]);
-                        IPEndPoint ep = new IPEndPoint(ip, 8888);
-                        CoreMain.serverEndpoint = ep;
+                        Network.NetworkParams.isObserver = true;
+                        IPAddress serverIP = IPAddress.Parse(args[1]);
+                        Network.NetworkParams.serverEndpoint = new IPEndPoint(serverIP, Network.NetworkParams.SERVER_LISTENER_PORT);
                         Debug.DebugTools.Report("[Program] (initialization): Starting as a observer");
                     }
                 }
                 else
                 {
-                    CoreMain.isServer = true;
+                    Network.NetworkParams.isServer = true;
                     CoreMain.s_localPlayer = 0;
                     Debug.DebugTools.Report("[Program] (initialization): Starting as a server");
                 }

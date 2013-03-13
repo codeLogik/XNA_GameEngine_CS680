@@ -9,6 +9,23 @@ using XNA_GameEngine.Gameplay;
 
 namespace XNA_GameEngine.Network
 {
+    class NetworkParams
+    {
+        // Network system parameters
+        static public bool isServer = false;
+        static public bool isObserver = true;
+        static public IPEndPoint serverEndpoint = null;
+        static public IPEndPoint clientEndpoint = null;
+
+        // Network Port Declarations
+        public const int SERVER_SENDER_PORT = 8000;
+        public const int SERVER_LISTENER_PORT = 8001;
+        public const int CLIENT_SENDER_PORT = 8100;
+        public const int CLIENT_LISTENER_PORT = 8101;
+        public const int OBSERVER_SENDER_PORT = 8200;
+        public const int OBSERVER_LISTENER_PORT = 8201;
+    }
+
     class NetworkManager
     {
         private NetworkThread networkThread;
@@ -38,7 +55,7 @@ namespace XNA_GameEngine.Network
             m_netSynchronizedInput.Initialize();
 
             // Initialize the network thread for either a server, client, or observer.
-            if (CoreMain.isServer)
+            if (Network.NetworkParams.isServer)
             {
                 networkThread = new NetworkServer();
             }
@@ -70,7 +87,7 @@ namespace XNA_GameEngine.Network
 
         public void Update()
         {
-            if (CoreMain.isServer)
+            if (Network.NetworkParams.isServer)
             {
                 // Get the input states from the server thread and add into array of input states.
                 System.Diagnostics.Debug.Assert(networkThread is NetworkServer, "Server expects to have a network server thread!");
@@ -102,7 +119,8 @@ namespace XNA_GameEngine.Network
                 System.Diagnostics.Debug.Assert(networkThread is NetworkClient, "Client expects to have a network client thread!");
                 NetworkClient netClient = (NetworkClient)networkThread;
 
-                NetGameState netGameState = netClient.GetNetGameState();
+                NetGameState netGameState = null; 
+                netClient.GetNetGameState(ref netGameState);
 
                 if (netGameState != null)
                 {
@@ -126,7 +144,7 @@ namespace XNA_GameEngine.Network
 
         public void PostUpdate()
         {
-            if (CoreMain.isServer)
+            if (Network.NetworkParams.isServer)
             {
                 // TODO @tom:  Handle sending out
                 // Get the input states from the server thread and add into array of input states.
@@ -147,7 +165,7 @@ namespace XNA_GameEngine.Network
                     networkServer.SendState(new NetGameState(netGOStates, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
                 }
             }
-            else if(!CoreMain.isObserver)
+            else if (!Network.NetworkParams.isObserver)
             {
                 // TODO @tom: Handle sending local player state to the server.
                 GameObject playerGO = GameplayWorld.GetInstance().GetPlayerGameObjectOrNULL(CoreMain.s_localPlayer);

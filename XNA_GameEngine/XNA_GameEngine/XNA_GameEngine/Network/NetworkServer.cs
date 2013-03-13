@@ -28,15 +28,13 @@ namespace XNA_GameEngine.Network
         private static object s_lockSimGameState = new object();
 
         public NetworkServer()
-            : base()
+            : base(NetworkParams.SERVER_LISTENER_PORT)
         {
             m_remoteIPEndpoints = new LinkedList<IPEndPoint>();
             m_receivedGOStates = new LinkedList<NetGOState>();
             m_playerToIPMap = new Dictionary<IPAddress, int>();
 
-            IPAddress ip = IPAddress.Parse("192.168.1.85");
-            IPEndPoint ep = new IPEndPoint(ip, 8888);
-            m_remoteIPEndpoints.AddFirst(ep);
+            m_remoteIPEndpoints.AddFirst(NetworkParams.clientEndpoint);
         }
 
         public void AddRemoteIPEndPoint(IPEndPoint remoteEndPoint, int playerID)
@@ -165,7 +163,15 @@ namespace XNA_GameEngine.Network
                 // If we successfully got the packet and deserialized correctly then queue it to be processed by the network manager.
                 if (incomingGOState != null)
                 {
-                    m_receivedGOStates.AddLast(incomingGOState);
+                    lock (s_lockRecGameState)
+                    {
+                        if (m_receivedGOStates == null)
+                        {
+                            m_receivedGOStates = new LinkedList<NetGOState>();
+                        }
+
+                        m_receivedGOStates.AddLast(incomingGOState);
+                    } 
                 }
             }
         }

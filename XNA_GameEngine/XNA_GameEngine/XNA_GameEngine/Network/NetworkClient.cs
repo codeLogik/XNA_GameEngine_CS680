@@ -21,16 +21,17 @@ namespace XNA_GameEngine.Network
         private IPEndPoint serverEndPoint;
 
         public NetworkClient()
-            : base()
+            : base(NetworkParams.CLIENT_LISTENER_PORT)
         {
-            serverEndPoint = CoreMain.serverEndpoint;
+            serverEndPoint = Network.NetworkParams.serverEndpoint;
         }
 
-        public NetGameState GetNetGameState()
+        public void GetNetGameState(ref NetGameState netGameState)
         {
             lock (s_recGameStateLock)
             {
-                return m_receivedGameState;
+                netGameState = m_receivedGameState;
+                m_receivedGameState = null;
             }
         } 
 
@@ -43,6 +44,7 @@ namespace XNA_GameEngine.Network
                 // This is a blocking call and will not unblock until packets have been received.
                 IPEndPoint serverEndPoint = null;
                 byte[] packet = GetPacket(ref serverEndPoint);
+                Debug.DebugTools.Report("[Networking] (client): Received packet from server of size: " + packet.Length); 
 
                 NetGameState incomingGameState = null;
                 MemoryStream memStream = new MemoryStream(packet);
