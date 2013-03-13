@@ -11,7 +11,7 @@ namespace XNA_GameEngine.Gameplay
     abstract class GameObject
     {
         protected Vector2 m_vPosition;
-        protected float m_fRotation;
+        protected double m_fRotation;
         protected float m_fScale;
         protected ICoreComponent [] m_GOComponents;
         Guid m_GORef;
@@ -60,6 +60,16 @@ namespace XNA_GameEngine.Gameplay
         public void SetPosition(Vector2 position)
         {
             m_vPosition = position;
+        }
+
+        public double GetRotation()
+        {
+            return m_fRotation;
+        }
+
+        public void SetRotation(double rotation)
+        {
+            m_fRotation = rotation;
         }
 
         public float GetScale()

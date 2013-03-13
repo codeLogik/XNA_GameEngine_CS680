@@ -129,6 +129,7 @@
     <Compile Include="Network\NetworkObject.cs" />
     <Compile Include="Network\NetworkServer.cs" />
     <Compile Include="Network\NFSM.cs" />
+    <Compile Include="Physics\BoundingBox2D.cs" />
     <Compile Include="Physics\Colliders\CircleCollider.cs" />
     <Compile Include="Physics\Colliders\LineCollider.cs" />
     <Compile Include="Physics\Colliders\SquareCollider.cs" />

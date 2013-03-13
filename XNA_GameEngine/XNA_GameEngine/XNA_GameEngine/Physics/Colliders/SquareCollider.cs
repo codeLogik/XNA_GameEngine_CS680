@@ -10,69 +10,83 @@ namespace XNA_GameEngine.Physics.Colliders
 {
     class SquareCollider : ICollider
     {
-        protected Vector2 m_vSize;
+        protected Vector2[] m_vertices;
+        protected Vector2[] m_sideNormals;
+        protected float m_vSize;
 
-        public SquareCollider(Vector2 size)
+        public SquareCollider(float size)
         {
+            float halfSize = size / 2;
+
+            // Vertices in counter-clockwise order.
+            m_vertices = new Vector2[] {
+                new Vector2(halfSize, -halfSize),
+                new Vector2(-halfSize, -halfSize),
+                new Vector2(-halfSize, halfSize),
+                new Vector2(halfSize, halfSize)
+            };
+
+            m_sideNormals = new Vector2[4];
+            for (int i = 0; i < 4; i++)
+            {
+                int j = i + 1;
+                if (i == 3)
+                {
+                    j = 0;
+                }
+                Vector2 sideDirection = m_vertices[j] - m_vertices[i];
+                sideDirection.Y = -sideDirection.Y;
+                sideDirection.Normalize();
+                m_sideNormals[i] = sideDirection;
+            }
+
             m_vSize = size;
         }
 
-        public Vector2 GetTopLeft()
-        {
-            return new Vector2(GetParent().GetParent().GetPosition().X - (m_vSize.X / 2.0f), GetParent().GetParent().GetPosition().Y - (m_vSize.Y / 2.0f));
-        }
-
-        public Vector2 GetBottomRight()
-        {
-            return new Vector2(GetParent().GetParent().GetPosition().X + (m_vSize.X / 2.0f), GetParent().GetParent().GetPosition().Y + (m_vSize.Y / 2.0f));
-        }
-
-        public Vector2 GetSize()
+        public float GetSize()
         {
             return m_vSize;
         }
 
         public override float GetMomentOfInertia(float mass)
         {
-            return mass * (m_vSize.Y * m_vSize.Y + m_vSize.X + m_vSize.X) / 12.0f;
+            return mass * (m_vSize * m_vSize + m_vSize + m_vSize) / 12.0f;
         }
-
+        
         public override Collision CollidesWith(SquareCollider other)
         {
-            Vector2 myTopLeft = GetTopLeft();
-            Vector2 myBottomRight = GetBottomRight();
-            Vector2 otherTopLeft = other.GetTopLeft();
-            Vector2 otherBottomRight = other.GetBottomRight();
-
+            BoundingBox2D myBox = GetBoundingBox();
+            BoundingBox2D otherBox = other.GetBoundingBox();
             // Trivial bounding box test
-            if (!base.BoundingBoxesOverlap(myTopLeft, myBottomRight, otherTopLeft, otherBottomRight))
+            if (!myBox.Overlap(otherBox))
             {
                 return null;
             }
+
             //XNA_GameEngine.Debug.DebugTools.Report("Boxes overlap!");
-            LineCollider[] mySides = new LineCollider[4];
-            LineCollider[] otherSides = new LineCollider[4];
+            LineCollider[] mySides = new LineCollider[] {
+                new LineCollider(m_vertices[0], m_vertices[1]),
+                new LineCollider(m_vertices[1], m_vertices[2]),
+                new LineCollider(m_vertices[2], m_vertices[3]),
+                new LineCollider(m_vertices[3], m_vertices[0])
+            };
 
-            mySides[0] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)));
-            mySides[0].SetParent(GetParent());
-            mySides[1] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[1].SetParent(GetParent());
-            mySides[2] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2(-(m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[2].SetParent(GetParent());
-            mySides[3] = new LineCollider(new Vector2((m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[3].SetParent(GetParent());
+            LineCollider[] otherSides = new LineCollider[] {
+                new LineCollider(other.m_vertices[0], other.m_vertices[1]),
+                new LineCollider(other.m_vertices[1], other.m_vertices[2]),
+                new LineCollider(other.m_vertices[2], other.m_vertices[3]),
+                new LineCollider(other.m_vertices[3], other.m_vertices[0])
+            };
 
-            otherSides[0] = new LineCollider(new Vector2(-(other.m_vSize.X / 2.0f), -(other.m_vSize.Y / 2.0f)), new Vector2((other.m_vSize.X / 2.0f), -(other.m_vSize.Y / 2.0f)));
-            otherSides[0].SetParent(other.GetParent());
-            otherSides[1] = new LineCollider(new Vector2(-(other.m_vSize.X / 2.0f), (other.m_vSize.Y / 2.0f)), new Vector2((other.m_vSize.X / 2.0f), (other.m_vSize.Y / 2.0f)));
-            otherSides[1].SetParent(other.GetParent());
-            otherSides[2] = new LineCollider(new Vector2(-(other.m_vSize.X / 2.0f), -(other.m_vSize.Y / 2.0f)), new Vector2(-(other.m_vSize.X / 2.0f), (other.m_vSize.Y / 2.0f)));
-            otherSides[2].SetParent(other.GetParent());
-            otherSides[3] = new LineCollider(new Vector2((other.m_vSize.X / 2.0f), -(other.m_vSize.Y / 2.0f)), new Vector2((other.m_vSize.X / 2.0f), (other.m_vSize.Y / 2.0f)));
-            otherSides[3].SetParent(other.GetParent());
+            // Make sure the LineColliders can transform and rotate their points to the world coordinates
+            for (int i = 0; i < 4; i++)
+            {
+                mySides[i].SetParent(GetParent());
+                otherSides[i].SetParent(other.GetParent());
+            }
 
-            Collision collision = new Collision();
-            Vector2 axisOfCollision = other.GetParent().GetParent().GetPosition() - GetParent().GetParent().GetPosition();
+            Vector2[] collisionPoints = new Vector2[2];
+            int p = 0;
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
@@ -80,124 +94,139 @@ namespace XNA_GameEngine.Physics.Colliders
                     Collision thisCollision = mySides[i].CollidesWith(otherSides[j]);
                     if (thisCollision != null)
                     {
-                        foreach (CollisionPoint point in thisCollision.GetPoints())
+                        CollisionPoint point = thisCollision.GetCollisionPoint();
+                        if (p >= 2)
                         {
-                            Vector2 location = point.WorldLocation;
-                            
-                            collision.AddCollisionPoint(new CollisionPoint(location, axisOfCollision, this, other));
+                            // Two rectangles can only intersect at 2 points max.
+                            return null;
                         }
+                        collisionPoints[p] = point.WorldLocation;
+                        p++;
                     }
                 }
             }
-            if (collision.GetPoints().Count == 0)
+            if (p == 0)
             {
                 return null;
             }
 
-            return collision;
-        }
+            Vector2 location = collisionPoints[0];
+            Vector2 axisOfCollision = Vector2.Zero;
+            if (p > 1)
+            {
+                XNA_GameEngine.Debug.DebugTools.Report("Collision Point 1: " + collisionPoints[0]);
+                XNA_GameEngine.Debug.DebugTools.Report("Collision Point 2: " + collisionPoints[1]);
+                location = (collisionPoints[0] + collisionPoints[1]) / 2;
+                axisOfCollision = collisionPoints[1] - collisionPoints[0];
 
+                XNA_GameEngine.Debug.DebugTools.Report("Initial Axis of Collision: " + axisOfCollision);
+
+                float tempX = axisOfCollision.X;
+                axisOfCollision.X = -axisOfCollision.Y;
+                axisOfCollision.Y = tempX;
+                axisOfCollision.Normalize();
+                XNA_GameEngine.Debug.DebugTools.Report("My Rotation: " + GetParent().GetParent().GetRotation());
+                Vector2 outOfSelf = location - GetParent().GetParent().GetPosition();
+                if(Vector2.Dot(axisOfCollision, outOfSelf) < 0) {
+                    axisOfCollision = -axisOfCollision;
+                }
+                Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
+                return collision;
+            }
+            else
+            {
+                XNA_GameEngine.Debug.DebugTools.Report("This actually happened... okay");
+                return null;
+            }
+        }
+        
         public override Collision CollidesWith(LineCollider other)
         {
-            Vector2 myTopLeft = new Vector2(GetParent().GetParent().GetPosition().X - (m_vSize.X / 2.0f), GetParent().GetParent().GetPosition().Y - (m_vSize.Y / 2.0f));
-            Vector2 myBottomRight = new Vector2(GetParent().GetParent().GetPosition().X + (m_vSize.X / 2.0f), GetParent().GetParent().GetPosition().Y + (m_vSize.Y / 2.0f));
+            BoundingBox2D myBox = GetBoundingBox();
+            BoundingBox2D otherBox = other.GetBoundingBox();
 
             // Trivial bounding box test
-            Vector2 otherTopLeft = new Vector2();
-            Vector2 otherBottomRight = new Vector2();
-            if (other.GetWorldPointA().X > other.GetWorldPointB().X)
-            {
-                otherTopLeft.X = other.GetWorldPointB().X;
-                otherBottomRight.X = other.GetWorldPointA().X;
-            }
-            else
-            {
-                otherTopLeft.X = other.GetWorldPointA().X;
-                otherBottomRight.X = other.GetWorldPointB().X;
-            }
-            if (other.GetWorldPointA().Y > other.GetWorldPointB().Y)
-            {
-                otherTopLeft.Y = other.GetWorldPointB().Y;
-                otherBottomRight.Y = other.GetWorldPointA().Y;
-            }
-            else
-            {
-                otherTopLeft.Y = other.GetWorldPointA().Y;
-                otherBottomRight.Y = other.GetWorldPointB().Y;
-            }
-
-            // Trivial bounding box test
-            if (!base.BoundingBoxesOverlap(myTopLeft, myBottomRight, otherTopLeft, otherBottomRight))
-            {
-                return null;
-            }
-            
-            LineCollider[] mySides = new LineCollider[4];
-
-            mySides[0] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)));
-            mySides[0].SetParent(GetParent());
-            mySides[1] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[1].SetParent(GetParent());
-            mySides[2] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2(-(m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[2].SetParent(GetParent());
-            mySides[3] = new LineCollider(new Vector2((m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[3].SetParent(GetParent());
-
-            Collision collision = new Collision();
-            for (int i = 0; i < 4; i++)
-            {
-                Collision thisCollision = mySides[i].CollidesWith(other);
-                if (thisCollision != null)
-                {
-                    foreach (CollisionPoint point in thisCollision.GetPoints())
-                    {
-                        Vector2 location = point.WorldLocation;
-                        Vector2 axisOfCollision = location - GetParent().GetParent().GetPosition();
-                        collision.AddCollisionPoint(new CollisionPoint(location, axisOfCollision, this, other));
-                    }
-                }
-            }
-            if (collision.GetPoints().Count == 0)
+            if (!myBox.Overlap(otherBox))
             {
                 return null;
             }
 
-            return collision;
+            Vector2 squareOrigin = GetParent().GetParent().GetPosition();
+            Vector2 linePA = other.TransformToWorld(other.GetLocalA());
+            Vector2 linePB = other.TransformToWorld(other.GetLocalB());
+
+            Vector2 toPointA = linePA - squareOrigin;
+            Vector2 dirLine = linePB - linePA;
+            dirLine.Normalize();
+
+            Vector2 perpToLine = toPointA - (dirLine * Vector2.Dot(toPointA, dirLine));
+
+            Matrix matrix = Matrix.CreateRotationZ(-((float)GetParent().GetParent().GetRotation()));
+            Vector2 rotatedDirection = Vector2.Transform(perpToLine, matrix);
+
+            float halfSize = m_vSize / 2.0f;
+            Vector2 pointOnRectangle = Vector2.Max(rotatedDirection, new Vector2(-halfSize, -halfSize));
+            pointOnRectangle = Vector2.Min(pointOnRectangle, new Vector2(halfSize, halfSize));
+
+            if (perpToLine.LengthSquared() <= pointOnRectangle.LengthSquared())
+            {
+                pointOnRectangle = base.TransformToWorld(pointOnRectangle);
+                Vector2 axisOfCollision = -perpToLine;
+                axisOfCollision.Normalize();
+                Collision collision = new Collision(new CollisionPoint(pointOnRectangle, axisOfCollision, this, other));
+                return collision;
+            }
+            return null;
         }
 
         public override Collision CollidesWith(CircleCollider other)
         {
-            LineCollider[] mySides = new LineCollider[4];
+            BoundingBox2D myBox = GetBoundingBox();
+            BoundingBox2D otherBox = other.GetBoundingBox();
 
-            mySides[0] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)));
-            mySides[0].SetParent(GetParent());
-            mySides[1] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[1].SetParent(GetParent());
-            mySides[2] = new LineCollider(new Vector2(-(m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2(-(m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[2].SetParent(GetParent());
-            mySides[3] = new LineCollider(new Vector2((m_vSize.X / 2.0f), -(m_vSize.Y / 2.0f)), new Vector2((m_vSize.X / 2.0f), (m_vSize.Y / 2.0f)));
-            mySides[3].SetParent(GetParent());
-
-            Collision collision = new Collision();
-            for (int i = 0; i < 4; i++)
-            {
-                Collision thisCollision = mySides[i].CollidesWith(other);
-                if (thisCollision != null)
-                {
-                    foreach (CollisionPoint point in thisCollision.GetPoints())
-                    {
-                        Vector2 location = point.WorldLocation;
-                        Vector2 axisOfCollision = location - GetParent().GetParent().GetPosition();
-                        collision.AddCollisionPoint(new CollisionPoint(location, axisOfCollision, this, other));
-                    }
-                }
-            }
-            if (collision.GetPoints().Count == 0)
+            // Trivial bounding box test
+            if (!myBox.Overlap(otherBox))
             {
                 return null;
             }
 
-            return collision;
+            Vector2 direction = other.GetOrigin() - GetParent().GetParent().GetPosition();
+
+            Matrix matrix = Matrix.CreateRotationZ(-((float)GetParent().GetParent().GetRotation()));
+            Vector2 rotatedDirection = Vector2.Transform(direction, matrix);
+
+            float halfSize = m_vSize / 2.0f;
+            Vector2 pointOnRectangle = Vector2.Max(rotatedDirection, new Vector2(-halfSize, -halfSize));
+            pointOnRectangle = Vector2.Min(pointOnRectangle, new Vector2(halfSize, halfSize));
+
+            float distance = direction.Length();
+            if (distance <= (pointOnRectangle.Length() + other.GetRadius()))
+            {
+                pointOnRectangle = base.TransformToWorld(pointOnRectangle);
+
+                Vector2 axisOfCollision = other.GetOrigin() - pointOnRectangle;
+                axisOfCollision.Normalize();
+                Collision collision = new Collision(new CollisionPoint(pointOnRectangle, axisOfCollision, this, other));
+                return collision;
+            }
+
+            return null;
+        }
+
+        public override BoundingBox2D GetBoundingBox()
+        {
+            Vector2 vertex = base.TransformToWorld(m_vertices[0]);
+            Vector2 topLeft = vertex;
+            Vector2 bottomRight = vertex;
+
+            for (int i = 1; i < 4; i++)
+            {
+                vertex = base.TransformToWorld(m_vertices[i]);
+                topLeft = Vector2.Min(topLeft, vertex);
+                bottomRight = Vector2.Max(bottomRight, vertex);
+            }
+            
+            return new BoundingBox2D(topLeft, bottomRight);
         }
     }
 }

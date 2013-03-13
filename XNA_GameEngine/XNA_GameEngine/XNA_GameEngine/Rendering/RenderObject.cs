@@ -15,7 +15,7 @@ namespace XNA_GameEngine.Rendering
     {
         Texture2D m_sprite;
         float m_fScale;
-        float m_fRotation;
+        double m_fRotation;
         Vector2 m_renderPosition;
         String m_assetName;
 
@@ -37,8 +37,8 @@ namespace XNA_GameEngine.Rendering
         public override void Update(GameTime gameTime)
         {
             // TODO @tom: Add logic to convert the world position into render position.
-            m_renderPosition.X = m_ownerGO.GetPosition().X - (m_sprite.Width / 2.0f);
-            m_renderPosition.Y = m_ownerGO.GetPosition().Y - (m_sprite.Height / 2.0f);
+            m_renderPosition = m_ownerGO.GetPosition();
+            m_fRotation = m_ownerGO.GetRotation();
 
             m_fScale = m_ownerGO.GetScale();
         }
@@ -51,8 +51,8 @@ namespace XNA_GameEngine.Rendering
                 m_renderPosition,
                 null,
                 Color.White,
-                m_fRotation,
-                Vector2.Zero,
+                (float)m_fRotation,
+                new Vector2(m_sprite.Width / 2.0f, m_sprite.Height / 2.0f),
                 m_fScale,
                 SpriteEffects.None,
                 0

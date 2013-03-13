@@ -72,11 +72,11 @@ namespace XNA_GameEngine
             Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
             playerObject.Initialize();
             collider.Initialize();
-            collider2.Initialize();
-            bottom.Initialize();
-            top.Initialize();
-            left.Initialize();
-            right.Initialize();
+         //   collider2.Initialize();
+          //  bottom.Initialize();
+          //  top.Initialize();
+          //  left.Initialize();
+          //  right.Initialize();
             GameplayWorld.GetInstance().AddGameObject(playerObject);
             GameplayWorld.GetInstance().AddGameObject(collider);
             GameplayWorld.GetInstance().AddGameObject(collider2);
