@@ -120,13 +120,6 @@ namespace XNA_GameEngine.Physics.Colliders
                     axisOfCollision = pointOfCollision - myWorldOrigin;
                     Collision averageCollision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
                     return averageCollision;
-
-                    /*
-Vector2 unitToAverage = axisOfCollision1 + axisOfCollision2;
-unitToAverage.Normalize();
-Vector2 collisionProjection = Vector2.Dot(axisOfCollision2, unitToAverage) * unitToAverage;
-Vector2 resolveOverlap =
-*/
                 }
             }
         }
