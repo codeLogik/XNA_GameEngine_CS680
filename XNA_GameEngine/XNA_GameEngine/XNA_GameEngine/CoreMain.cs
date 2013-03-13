@@ -63,24 +63,32 @@ namespace XNA_GameEngine
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject("debug_player");
+            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject("square");
+            Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject("square2");
             Debug.DebugColliderObject collider = new Debug.DebugColliderObject();
             Debug.DebugColliderObject2 collider2 = new Debug.DebugColliderObject2();
             Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
             Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();
             Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
+            
+            // Initialize the new objects
             playerObject.Initialize();
+            playerObject2.Initialize();
             collider.Initialize();
             collider2.Initialize();
             bottom.Initialize();
             top.Initialize();
             left.Initialize();
             right.Initialize();
-            playerObject.SetRef(1);
+
+            // Set player ID's for player objects.
             playerObject.SetPlayerID(0);
-            //playerObject.SetPlayerID();
+            playerObject2.SetPlayerID(1);
+
+            // Add game objects to gameplay world.
             GameplayWorld.GetInstance().AddGameObject(playerObject);
+            GameplayWorld.GetInstance().AddGameObject(playerObject2);
             GameplayWorld.GetInstance().AddGameObject(collider);
             GameplayWorld.GetInstance().AddGameObject(collider2);
             GameplayWorld.GetInstance().AddGameObject(left);
@@ -88,16 +96,8 @@ namespace XNA_GameEngine
             GameplayWorld.GetInstance().AddGameObject(bottom);
             GameplayWorld.GetInstance().AddGameObject(top);
 
-            Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject("debug_player2");
-            playerObject2.Initialize();
-            playerObject2.SetRef(2);
-            playerObject2.SetPlayerID(1);
-            playerObject2.SetPosition(new Vector2(180.0f, 180.0f));
-            //playerObject.SetPlayerID();
-            GameplayWorld.GetInstance().AddGameObject(playerObject2);
-
-
-            // TODO: use this.Content to load your game content here
+            // Set the starting position for the second player.            
+            playerObject2.SetPosition(new Vector2(280.0f, 380.0f));
         }
 
         /// <summary>

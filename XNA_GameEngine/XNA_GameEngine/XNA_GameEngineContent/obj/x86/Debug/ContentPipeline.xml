@@ -8,7 +8,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player.xnb</Output>
-      <Time>2013-03-11T23:20:30.9894084-07:00</Time>
+      <Time>2013-03-12T21:48:48.735906-07:00</Time>
     </Item>
     <Item>
       <Source>debug_player2.bmp</Source>
@@ -17,7 +17,34 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player2.xnb</Output>
-      <Time>2013-03-11T23:42:54.0702283-07:00</Time>
+      <Time>2013-03-12T21:46:29.4949419-07:00</Time>
+    </Item>
+    <Item>
+      <Source>circle.png</Source>
+      <Name>circle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\circle.xnb</Output>
+      <Time>2013-03-12T21:48:48.7339059-07:00</Time>
+    </Item>
+    <Item>
+      <Source>square.png</Source>
+      <Name>square</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\square.xnb</Output>
+      <Time>2013-03-12T21:48:48.735906-07:00</Time>
+    </Item>
+    <Item>
+      <Source>square2.png</Source>
+      <Name>square2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\square2.xnb</Output>
+      <Time>2013-03-12T23:22:31.0374832-07:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

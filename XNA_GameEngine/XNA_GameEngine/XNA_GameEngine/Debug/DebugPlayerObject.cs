@@ -35,15 +35,16 @@ namespace XNA_GameEngine.Debug
             //String assetName = "debug_player";
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, m_assetName);
             Network.NetworkObject networkObject = new Network.NetworkObject(this);
-            String assetName = "square";
-            Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
-            AddComponent(renderObject);
-            AddComponent(networkObject);
+            
             //Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_vPosition, 64.5f);
             Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(new Vector2(129.0f));
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 50.0f, collider);
             m_physicsObject = physicsObject;
+            
+            // Add components to the game object.
             AddComponent(physicsObject);
+            AddComponent(renderObject);
+            AddComponent(networkObject);
         }
 
         public override void Update(GameTime gameTime)

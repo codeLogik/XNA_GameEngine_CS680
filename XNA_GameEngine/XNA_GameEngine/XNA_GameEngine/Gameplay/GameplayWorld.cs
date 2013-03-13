@@ -12,6 +12,8 @@ namespace XNA_GameEngine.Gameplay
         private Dictionary</*Guid*/int, GameObject> m_gameObjects;
         private Dictionary<int, GameObject> m_playerGO;
 
+        private static int m_newGORef;
+
         // Simulation tick count.
         UInt64 m_frameNumber;
 
@@ -20,6 +22,7 @@ namespace XNA_GameEngine.Gameplay
 
         public GameplayWorld()
         {
+            m_newGORef = 0;
             m_gameObjects = new Dictionary</*Guid*/int, GameObject>();
             m_playerGO = new Dictionary<int, GameObject>();
         }
@@ -42,6 +45,12 @@ namespace XNA_GameEngine.Gameplay
         public UInt64 GetCurrentFrameNumber()
         {
             return m_frameNumber;
+        }
+
+        private int GetNewRef()
+        {
+            m_newGORef++;
+            return m_newGORef;
         }
 
         public GameObject GetGameObjectOrNULL(/*Guid*/int goRef)
@@ -77,7 +86,9 @@ namespace XNA_GameEngine.Gameplay
             {
                 //Guid newObjGuid = Guid.NewGuid();
                 //m_gameObjects.Add(newObjGuid, go);
-                m_gameObjects.Add(go.GetRef(), go);
+                int newRef = GetNewRef();
+                go.SetRef(newRef);
+                m_gameObjects.Add(newRef, go);
 
                 // Add components to other modules
                 Network.NetworkManager.GetInstance().AddNetworkObject(go.GetComponentByTypeOrNULL(Core.ICoreComponent.ComponentType.COMPONENT_Networking));
