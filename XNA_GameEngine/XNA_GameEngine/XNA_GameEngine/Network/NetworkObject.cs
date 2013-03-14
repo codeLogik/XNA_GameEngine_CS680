@@ -21,7 +21,7 @@ namespace XNA_GameEngine.Network
             : base(parentGO)
         {
             m_netState = new NetGOState(0);
-            m_previousNetState = new NetGOState(0);
+            m_previousNetState = null;
             m_Type = ComponentType.COMPONENT_Networking;
         }
 
@@ -41,7 +41,7 @@ namespace XNA_GameEngine.Network
             
             Physics.PhysicsObject physObj = (Physics.PhysicsObject)m_ownerGO.GetComponentByTypeOrNULL(ComponentType.COMPONENT_Physics);
 
-            if (physObj != null)
+            if (/*physObj != null && m_previousNetState != null*/false)
             {
                 // Set the new velocity of the object based on the direction of the previous known position to the next. Make sure to just get
                 // this normalized direction and multiply it by the current speed.  Physics will handle adjusting the velocity appropriately.
