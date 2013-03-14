@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.Xna.Framework;
+
 namespace XNA_GameEngine.Network.NetworkDataTypes
 {
     [Serializable]
@@ -30,6 +32,12 @@ namespace XNA_GameEngine.Network.NetworkDataTypes
             this.y = y;
         }
 
+        public NVec2(Vector2 vec2)
+        {
+            this.x = vec2.X;
+            this.y = vec2.Y;
+        }
+
         public NVec2(NVec2 nvec2)
         {
             this.x = nvec2.x;
@@ -37,6 +45,7 @@ namespace XNA_GameEngine.Network.NetworkDataTypes
         }
         #endregion
 
+        #region Operator_Overloads
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -90,6 +99,12 @@ namespace XNA_GameEngine.Network.NetworkDataTypes
             }
 
             return !lhs.Equals(rhs);
+        }
+        #endregion
+
+        public Vector2 GetVector2()
+        {
+            return new Vector2(this.x, this.y);
         }
     }
 }

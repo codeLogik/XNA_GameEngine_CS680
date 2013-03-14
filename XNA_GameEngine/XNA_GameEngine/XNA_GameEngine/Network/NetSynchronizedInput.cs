@@ -31,7 +31,16 @@ namespace XNA_GameEngine.Network
             }
         }
 
-        public void Update()
+        public void UpdateLocalPlayer()
+        {
+            if (CoreMain.s_localPlayer >= 0)
+            {
+                m_localInput.Update();
+                m_synchronizedStates[XNA_GameEngine.CoreMain.s_localPlayer] = m_localInput.GetLocalInputState();
+            }
+        }
+
+        public void Update(InputState[] inputStates)
         {
             // Gather the synchronized input of the networked players and the local player.
             m_previousLocalInput = m_localInput;
@@ -51,6 +60,7 @@ namespace XNA_GameEngine.Network
                     // from the networking threads.  Additionally, there is the possibility that the states have been
                     // gathered asynchronously for several frames due to network latency.  We must or all of the inputs
                     // together to be assured that all input is accounted for.  
+                    m_synchronizedStates[i] = inputStates[i];
                 }
             }
         }

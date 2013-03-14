@@ -14,6 +14,13 @@ namespace XNA_GameEngine.Debug
 {
     class DebugColliderObject : GameObject
     {
+        private String m_assetName;
+
+        public DebugColliderObject(String assetName)
+        {
+            m_assetName = assetName;
+        }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -21,14 +28,16 @@ namespace XNA_GameEngine.Debug
             m_fRotation = 0;
             m_vPosition = new Vector2(300.0f, 100.0f);
 
-            // Add render component.
-            String assetName = "square";
-            Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
-            AddComponent(renderObject);
-          //  Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(64.5f);
-            Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(new Vector2(129.0f));
+            // Create render, network, collision, and physics components.
+            Rendering.RenderObject renderObject = new Rendering.RenderObject(this, m_assetName);
+            Network.NetworkObject networkObject = new Network.NetworkObject(this);
+            Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(64.5f);
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 50.0f, collider);
+
+            // Add components
             AddComponent(physicsObject);
+            AddComponent(renderObject);
+            AddComponent(networkObject);
         }
     }
 }

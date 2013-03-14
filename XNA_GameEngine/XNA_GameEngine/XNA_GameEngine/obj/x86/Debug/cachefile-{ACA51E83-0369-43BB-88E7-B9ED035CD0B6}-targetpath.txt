@@ -1,3 +1,0 @@
-Content\debug_player.xnb
-Content\circle.xnb
-Content\square.xnb

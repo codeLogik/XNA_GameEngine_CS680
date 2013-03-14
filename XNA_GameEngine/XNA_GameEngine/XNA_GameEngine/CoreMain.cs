@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -27,8 +28,7 @@ namespace XNA_GameEngine
 
         static public int MAX_PLAYERS = 4;
         static public int s_localPlayer = 0;
-        static public bool isServer = false;
-
+        
         public CoreMain()
         {
             m_graphics = new GraphicsDeviceManager(this);
@@ -46,7 +46,7 @@ namespace XNA_GameEngine
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
             // Initialize the singleton component managers and worlds.
-            NetworkManager.GetInstance().Initialize("localhost", 8888);
+            NetworkManager.GetInstance().Initialize();
             PhysicsWorld.GetInstance().Initialize();
             PhysicsWorld.GetInstance().SetGravity(new Vector2(0.0f, 100.0f));
             GameplayWorld.GetInstance().Initialize();
@@ -75,7 +75,7 @@ namespace XNA_GameEngine
             // 7: Stacked Boxes Demo
             // 8: Single Player Square Object (controlled by arrow keys) with some other objects around.
 
-            int demoNumber = 9;
+            int demoNumber = 6;
 
             Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
@@ -155,7 +155,8 @@ namespace XNA_GameEngine
             else if (demoNumber == 5)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
-                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f);
+                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
+                playerObject.SetPlayerID(0);
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
             }
@@ -203,7 +204,8 @@ namespace XNA_GameEngine
             else if (demoNumber == 8)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
-                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f);
+                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
+                playerObject.SetPlayerID(0);
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
 
@@ -217,7 +219,7 @@ namespace XNA_GameEngine
             else if (demoNumber == 9)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
-                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f);
+                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
 
@@ -238,6 +240,9 @@ namespace XNA_GameEngine
             GameplayWorld.GetInstance().AddGameObject(right);
             GameplayWorld.GetInstance().AddGameObject(bottom);
             GameplayWorld.GetInstance().AddGameObject(top);
+
+            // Set the starting position for the second player.            
+      //      playerObject2.SetPosition(new Vector2(280.0f, 380.0f));
         }
 
         /// <summary>
@@ -267,6 +272,10 @@ namespace XNA_GameEngine
             PhysicsWorld.GetInstance().Update(gameTime);
             SoundManager.GetInstance().Update();
 
+            // Run post update on any modules that need post update called on them.
+            NetworkManager.GetInstance().PostUpdate();
+
+            // Update the base XNA framework.
             base.Update(gameTime);
         }
 

@@ -6,8 +6,15 @@ using System.Text;
 namespace XNA_GameEngine.Network
 {
     [Serializable]
-    class NetGOState
+    class NetGOState : NetworkPacket
     {
+        public NetworkDataTypes.NVec2 m_position;
+        public double m_rotation;
+        public /*Guid*/int m_goRef;
 
+        public NetGOState(UInt64 currentFrame)
+            : base(currentFrame)
+        {
+        }
     }
 }
