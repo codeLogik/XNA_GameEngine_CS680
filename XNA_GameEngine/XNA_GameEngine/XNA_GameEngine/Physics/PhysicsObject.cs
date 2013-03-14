@@ -59,6 +59,19 @@ namespace XNA_GameEngine.Physics
             return m_fMass;
         }
 
+        public float GetAngularVelocity()
+        {
+            return m_fAngularVelocity;
+        }
+
+        public void SetAngularVelocity(float angularVelocity)
+        {
+            if (!m_bImmobile)
+            {
+                m_fAngularVelocity = angularVelocity;
+            }
+        }
+
         public Vector2 GetVelocity()
         {
             return m_vVelocity;
@@ -121,18 +134,22 @@ namespace XNA_GameEngine.Physics
                     Vector2 pointOfCollision = point.WorldLocation;
 
                     // Get impulse
-                    float tmp1 = Vector2.Dot(m_vVelocity, axisOfCollision);
-                    float tmp2 = Vector2.Dot(physObj.m_vVelocity, axisOfCollision);
-                    if (m_bImmobile) tmp1 = 0.0f;
-                    if (physObj.m_bImmobile) tmp2 = 0.0f;
+                    Vector2 distanceFromCenterA = pointOfCollision - GetParent().GetPosition();
+                    Vector2 distanceFromCenterB = pointOfCollision - physObj.GetParent().GetPosition();
+                    Vector2 initalTotalVelocityA = m_vVelocity + new Vector2(-m_fAngularVelocity * distanceFromCenterA.Y, m_fAngularVelocity * distanceFromCenterA.X);
+                    if (m_bImmobile) initalTotalVelocityA = Vector2.Zero;
+                    Vector2 initalTotalVelocityB = physObj.m_vVelocity + new Vector2(-physObj.m_fAngularVelocity * distanceFromCenterB.Y, physObj.m_fAngularVelocity * distanceFromCenterB.X);
+                    if (physObj.m_bImmobile) initalTotalVelocityB = Vector2.Zero;
 
-                    double impulse = ((m_fElasticity + physObj.m_fElasticity + 1.0f) * (tmp2 - tmp1)) / ((1.0f / m_fMass) + (1.0f / physObj.m_fMass));
+                    Vector2 relativeVelocity = initalTotalVelocityB - initalTotalVelocityA;
+
+                    double crossA = distanceFromCenterA.X * axisOfCollision.Y - distanceFromCenterA.Y * axisOfCollision.X;
+                    double crossB = distanceFromCenterB.X * axisOfCollision.Y - distanceFromCenterB.Y * axisOfCollision.X;
+                    double momentOfInertiaA = m_collider.GetMomentOfInertia(m_fMass);
+                    double momentOfInertiaB = physObj.m_collider.GetMomentOfInertia(physObj.m_fMass);
+
+                    double impulse = Vector2.Dot(((m_fElasticity + physObj.m_fElasticity + 1.0f) * (initalTotalVelocityB - initalTotalVelocityA)), axisOfCollision) / ((1.0f / m_fMass) + (1.0f / physObj.m_fMass) + ((crossA * crossA) / momentOfInertiaA) + ((crossB * crossB) / momentOfInertiaB));
                     Vector2 impulseVector = (float)impulse * axisOfCollision;
-                    
-                    XNA_GameEngine.Debug.DebugTools.Report("Impulse Vector: " + impulseVector);
-
-                    XNA_GameEngine.Debug.DebugTools.Report("My Velocity: " + m_vVelocity);
-                    XNA_GameEngine.Debug.DebugTools.Report("Other Velocity: " + physObj.m_vVelocity);
                     
                     // Apply impulse
                     SetVelocity(GetVelocity() + (impulseVector / m_fMass));
@@ -140,16 +157,14 @@ namespace XNA_GameEngine.Physics
                     
                     XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
                     XNA_GameEngine.Debug.DebugTools.Report("Point of Collisin: " + pointOfCollision);
+
+                    crossA = distanceFromCenterA.X * impulseVector.Y - distanceFromCenterA.Y * impulseVector.X;
+                    SetAngularVelocity(GetAngularVelocity() + (float) (crossA / m_collider.GetMomentOfInertia(m_fMass)));
+
+                    crossB = distanceFromCenterB.X * impulseVector.Y - distanceFromCenterB.Y * impulseVector.X;
+                    physObj.SetAngularVelocity(physObj.GetAngularVelocity() - (float) (crossB / physObj.m_collider.GetMomentOfInertia(physObj.m_fMass)));
+
                     
-                    Vector2 originToCollision = pointOfCollision - GetParent().GetPosition();
-                    double crossProduct = impulseVector.X * originToCollision.Y - impulseVector.Y * originToCollision.X;
-                    m_fAngularVelocity -= (float) (crossProduct / m_collider.GetMomentOfInertia(m_fMass));
-
-                    originToCollision = pointOfCollision - physObj.GetParent().GetPosition();
-                    crossProduct = impulseVector.X * originToCollision.Y - impulseVector.Y * originToCollision.X;
-                    physObj.m_fAngularVelocity += ((float)crossProduct / physObj.m_collider.GetMomentOfInertia(physObj.m_fMass));
-
-
                     // Collision Correction Component
                     Vector2 resolveOverlap = collision.GetResolveOverlap();
                     XNA_GameEngine.Debug.DebugTools.Report("Overlap Distance: " + resolveOverlap);

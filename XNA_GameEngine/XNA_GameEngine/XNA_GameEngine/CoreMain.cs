@@ -135,7 +135,7 @@ namespace XNA_GameEngine
             }
             else if (demoNumber == 5)
             {
-                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+              //  PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
