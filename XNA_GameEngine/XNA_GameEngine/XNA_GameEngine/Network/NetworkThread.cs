@@ -39,14 +39,8 @@ namespace XNA_GameEngine.Network
             // Start the threads.
             try
             {
-               // m_SenderThread.Start();
-
-                // TODO @tom: Remove after setting up working on different machines.
-                //if (!CoreMain.isServer)
-                //{
-                    m_ListenerThread.Start();
-                //}
-                Debug.DebugTools.Log("Network", "Threading", "Sender and Listeners threads started successfully");
+                m_ListenerThread.Start();   
+                Debug.DebugTools.Log("Network", "Threading", "Listener threads started successfully");
             }
             catch (ThreadStateException e)
             {
@@ -57,15 +51,6 @@ namespace XNA_GameEngine.Network
         public void ShutDown()
         {
             // Shut down the threads.
-            try
-            {
-                //m_SenderThread.Abort();
-            }
-            catch(ThreadAbortException)
-            {
-                // Intentionally blank as we wanted to shut this thread down.
-            }
-
             try
             {
                 m_ListenerThread.Abort();

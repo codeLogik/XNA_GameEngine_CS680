@@ -127,8 +127,10 @@ namespace XNA_GameEngine
             PhysicsWorld.GetInstance().Update(gameTime);
             SoundManager.GetInstance().Update();
 
+            // Run post update on any modules that need post update called on them.
             NetworkManager.GetInstance().PostUpdate();
 
+            // Update the base XNA framework.
             base.Update(gameTime);
         }
 

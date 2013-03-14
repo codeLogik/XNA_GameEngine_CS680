@@ -98,8 +98,8 @@ namespace XNA_GameEngine.Network
 
                     foreach (IPEndPoint remoteEndPoint in m_remoteIPEndpoints)
                     {
-                         SendPacket(memStream.GetBuffer(), remoteEndPoint);
-                        Debug.DebugTools.Report("[Network] (packet): Successfully sent " + memStream.GetBuffer().Count() + " bytes");
+                        SendPacket(memStream.GetBuffer(), remoteEndPoint);
+                        //Debug.DebugTools.Report("[Network] (packet): Successfully sent " + memStream.GetBuffer().Count() + " bytes");
                     }
                 }
 

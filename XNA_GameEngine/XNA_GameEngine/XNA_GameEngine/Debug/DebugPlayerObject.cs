@@ -30,13 +30,11 @@ namespace XNA_GameEngine.Debug
             m_fRotation = 0.0f;
             m_vPosition = new Vector2(100.0f, 100.0f);
 
-            // Add render component.
-            //String assetName = "square";
-            //String assetName = "debug_player";
+            // Create render and network components.
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, m_assetName);
             Network.NetworkObject networkObject = new Network.NetworkObject(this);
             
-        //    Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_vPosition, 64.5f);
+            // Create physics collider and physics object.
             Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(new Vector2(129.0f));
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 50.0f, collider);
             m_physicsObject = physicsObject;
