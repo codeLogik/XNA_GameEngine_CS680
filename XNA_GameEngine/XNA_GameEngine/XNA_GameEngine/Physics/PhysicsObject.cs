@@ -64,6 +64,11 @@ namespace XNA_GameEngine.Physics
             return m_vVelocity;
         }
 
+        public float GetSpeed()
+        {
+            return m_vVelocity.Length();
+        }
+
         public void SetVelocity(Vector2 velocity)
         {
             if (!m_bImmobile)
