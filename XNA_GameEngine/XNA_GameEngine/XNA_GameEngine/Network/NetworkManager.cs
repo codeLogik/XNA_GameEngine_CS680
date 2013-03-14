@@ -159,7 +159,7 @@ namespace XNA_GameEngine.Network
                     netGOStates[i] = goNetObjects[i].GetCurrentNetState();
                 }
 
-                if (GameplayWorld.GetInstance().GetCurrentFrameNumber() % 10 == 0)
+                if (GameplayWorld.GetInstance().GetCurrentFrameNumber() % 3 == 0)
                 {
                     // Queue the new network game state for the network server.
                     networkServer.SendState(new NetGameState(netGOStates, Gameplay.GameplayWorld.GetInstance().GetCurrentFrameNumber()));
