@@ -18,7 +18,6 @@ namespace XNA_GameEngine.Debug
         {
             base.Initialize();
 
-            m_fScale = 1.0f;
             m_fRotation = 0.0f;
             m_vPosition = new Vector2(300.0f, 250.0f);
 

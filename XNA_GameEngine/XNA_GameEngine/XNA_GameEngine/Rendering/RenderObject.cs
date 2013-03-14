@@ -14,7 +14,7 @@ namespace XNA_GameEngine.Rendering
     class RenderObject : ICoreComponent
     {
         Texture2D m_sprite;
-        float m_fScale;
+        Vector2 m_fScale;
         double m_fRotation;
         Vector2 m_renderPosition;
         String m_assetName;
@@ -22,7 +22,7 @@ namespace XNA_GameEngine.Rendering
         public RenderObject(GameObject parentGO, String assetName)
             : base(parentGO)
         {
-            m_fScale = 1.0f;
+            m_fScale = Vector2.One;
             m_fRotation = 0.0f;
             m_assetName = assetName;
             m_renderPosition = Vector2.Zero;

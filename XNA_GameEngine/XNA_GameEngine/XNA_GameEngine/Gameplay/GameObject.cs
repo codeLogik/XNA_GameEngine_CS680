@@ -12,7 +12,7 @@ namespace XNA_GameEngine.Gameplay
     {
         protected Vector2 m_vPosition;
         protected double m_fRotation;
-        protected float m_fScale;
+        protected Vector2 m_fScale;
         protected ICoreComponent [] m_GOComponents;
         Guid m_GORef;
 
@@ -20,7 +20,7 @@ namespace XNA_GameEngine.Gameplay
         {
             m_GOComponents = new ICoreComponent[(int)ICoreComponent.ComponentType.COMPONENT_COUNT];
             m_vPosition = Vector2.Zero;
-            m_fScale = 1.0f;
+            m_fScale = Vector2.One;
             m_fRotation = 0.0f;
         }
 
@@ -72,12 +72,12 @@ namespace XNA_GameEngine.Gameplay
             m_fRotation = rotation;
         }
 
-        public float GetScale()
+        public Vector2 GetScale()
         {
             return m_fScale;
         }
 
-        public void SetScale(float scale)
+        public void SetScale(Vector2 scale)
         {
             m_fScale = scale;
         }

@@ -23,7 +23,7 @@ namespace XNA_GameEngine.Debug
             m_vPosition = position;
             m_fRotation = rotation;
             m_fRadius = radius;
-            m_fScale = radius / 64.5f;
+            m_fScale = new Vector2(radius / 64.5f);
             m_fMass = mass;
             m_vInitialVelocity = initialVelocity;
         }

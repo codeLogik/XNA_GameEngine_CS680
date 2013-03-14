@@ -16,16 +16,24 @@ namespace XNA_GameEngine.Debug
     {
         private Physics.PhysicsObject m_physicsObject;
 
-        public DebugPlayerObject()
-        {
+        float m_fElasticity;
+        Vector2 m_vSize;
+        float m_fMass;
 
+        public DebugPlayerObject(Vector2 position, Vector2 size, double rotation, float mass, float elasticity)
+        {
+            m_vPosition = position;
+            m_fRotation = rotation;
+            m_vSize = size;
+            m_fScale = size / new Vector2(129.0f);
+            m_fMass = mass;
+            m_fElasticity = elasticity;
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            m_fScale = 1.0f;
             m_fRotation = 0.0f;
             m_vPosition = new Vector2(100.0f, 100.0f);
 
@@ -33,9 +41,9 @@ namespace XNA_GameEngine.Debug
             String assetName = "square";
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
             AddComponent(renderObject);
-        //    Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_vPosition, 64.5f);
-            Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(new Vector2(129.0f));
-            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 50.0f, collider);
+            Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(m_vSize);
+            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, m_fMass, collider);
+            physicsObject.SetElasticity(m_fElasticity);
             m_physicsObject = physicsObject;
             AddComponent(physicsObject);
         }

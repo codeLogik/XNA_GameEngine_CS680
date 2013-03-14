@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Core\CoreComponent.cs" />
     <Compile Include="Debug\CircleObject.cs" />
+    <Compile Include="Debug\SquareObject.cs" />
     <Compile Include="Debug\DebugColliderObject2.cs" />
     <Compile Include="Debug\SceneBoundingBoxRight.cs" />
     <Compile Include="Debug\SceneBoundingBoxLeft.cs" />

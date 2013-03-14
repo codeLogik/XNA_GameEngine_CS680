@@ -18,14 +18,13 @@ namespace XNA_GameEngine.Debug
         {
             base.Initialize();
 
-            m_fScale = 1.0f;
             m_fRotation = 0.0f;
             m_vPosition = new Vector2(0.1f, 680.0f);
 
             // Add render component.
             Physics.Colliders.LineCollider collider = new Physics.Colliders.LineCollider(Vector2.Zero, new Vector2(959.8f, 0.0f));
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, float.MaxValue, collider);
-            physicsObject.SetElasticity(0.8f);
+            physicsObject.SetElasticity(0.0f);
             physicsObject.Immobilize();
             AddComponent(physicsObject);
         }
