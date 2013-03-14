@@ -8,6 +8,7 @@ namespace XNA_GameEngine.Network
     [Serializable]
     class NetGOState : NetworkPacket
     {
+        public NetworkDataTypes.NVec2 m_velocity;
         public NetworkDataTypes.NVec2 m_position;
         public double m_rotation;
         public /*Guid*/int m_goRef;
