@@ -32,6 +32,7 @@ namespace XNA_GameEngine.Network
             m_netState.m_goRef = m_ownerGO.GetRef();
             Physics.PhysicsObject physObj = (Physics.PhysicsObject)m_ownerGO.GetComponentByTypeOrNULL(ComponentType.COMPONENT_Physics);
             m_netState.m_velocity = new NVec2(physObj.GetVelocity());
+            m_netState.m_position = new NVec2(m_ownerGO.GetPosition());
             m_netState.m_rotation = m_ownerGO.GetRotation();
             m_netState.m_currentFrameNumber = GameplayWorld.GetInstance().GetCurrentFrameNumber();
         }
@@ -42,6 +43,7 @@ namespace XNA_GameEngine.Network
             
             Physics.PhysicsObject physObj = (Physics.PhysicsObject)m_ownerGO.GetComponentByTypeOrNULL(ComponentType.COMPONENT_Physics);
             physObj.SetVelocity(netGOstate.m_velocity.GetVector2());
+            m_ownerGO.SetPosition(netGOstate.m_position.GetVector2());
 
             /*if (physObj != null && m_previousNetState != null/*false)
             {
