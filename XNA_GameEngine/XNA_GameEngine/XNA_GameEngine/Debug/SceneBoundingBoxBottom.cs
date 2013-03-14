@@ -14,6 +14,17 @@ namespace XNA_GameEngine.Debug
 {
     class SceneBoundingBoxBottom : GameObject
     {
+        private float m_fElasticity;
+        public SceneBoundingBoxBottom()
+        {
+            m_fElasticity = 0.0f;
+        }
+
+        public void SetElasticity(float elasticity)
+        {
+            m_fElasticity = elasticity;
+        }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -24,7 +35,7 @@ namespace XNA_GameEngine.Debug
             // Add render component.
             Physics.Colliders.LineCollider collider = new Physics.Colliders.LineCollider(Vector2.Zero, new Vector2(959.8f, 0.0f));
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, float.MaxValue, collider);
-            physicsObject.SetElasticity(0.0f);
+            physicsObject.SetElasticity(m_fElasticity);
             physicsObject.Immobilize();
             AddComponent(physicsObject);
         }

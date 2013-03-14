@@ -126,7 +126,7 @@ namespace XNA_GameEngine.Physics
                 Collision collision = m_collider.CollidesWith(other);
                 if (collision != null)
                 {
-                    XNA_GameEngine.Debug.DebugTools.Report("");
+                //    XNA_GameEngine.Debug.DebugTools.Report("");
 
                     // This only ever returns one point now
                     CollisionPoint point = collision.GetCollisionPoint();
@@ -155,8 +155,8 @@ namespace XNA_GameEngine.Physics
                     SetVelocity(GetVelocity() + (impulseVector / m_fMass));
                     physObj.SetVelocity(physObj.GetVelocity() - (impulseVector / physObj.m_fMass));
                     
-                    XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
-                    XNA_GameEngine.Debug.DebugTools.Report("Point of Collisin: " + pointOfCollision);
+                   // XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
+                  //  XNA_GameEngine.Debug.DebugTools.Report("Point of Collisin: " + pointOfCollision);
 
                     crossA = distanceFromCenterA.X * impulseVector.Y - distanceFromCenterA.Y * impulseVector.X;
                     SetAngularVelocity(GetAngularVelocity() + (float) (crossA / m_collider.GetMomentOfInertia(m_fMass)));
@@ -167,7 +167,7 @@ namespace XNA_GameEngine.Physics
                     
                     // Collision Correction Component
                     Vector2 resolveOverlap = collision.GetResolveOverlap();
-                    XNA_GameEngine.Debug.DebugTools.Report("Overlap Distance: " + resolveOverlap);
+               //     XNA_GameEngine.Debug.DebugTools.Report("Overlap Distance: " + resolveOverlap);
                     if(!m_bImmobile && !physObj.m_bImmobile) {
                         GetParent().SetPosition(GetParent().GetPosition() - (resolveOverlap / 2.0f));
                         physObj.GetParent().SetPosition(physObj.GetParent().GetPosition() + (resolveOverlap / 2.0f));

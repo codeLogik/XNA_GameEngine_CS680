@@ -75,18 +75,34 @@ namespace XNA_GameEngine
             // 7: Stacked Boxes Demo
             // 8: Single Player Square Object (controlled by arrow keys) with some other objects around.
 
-            int demoNumber = 7;
+            int demoNumber = 9;
+
+            Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
+            Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
+            Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();
+            Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
 
             // Gaseous Demo
             if (demoNumber == 0)
             {
+                top.SetElasticity(1.0f);
+                bottom.SetElasticity(1.0f);
+                right.SetElasticity(1.0f);
+                left.SetElasticity(1.0f);
+
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 for (int j = 0; j < 10; j++)
                 {
                     for (int i = 0; i < 5; i++)
                     {
+                        Color color = Color.Green;
+                        if ((i % 2) == (j % 2))
+                        {
+                            color = Color.Red;
+                        }
+
                         Vector2 velocity = new Vector2((float)(random.NextDouble() * 200), (float)(random.NextDouble() * 200));
-                        Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), 25.0f, 0.0f, 10.0f, velocity);
+                        Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), 25.0f, 0.0f, 10.0f, 1.0f, velocity, color);
                         circleObject.Initialize();
                         GameplayWorld.GetInstance().AddGameObject(circleObject);
                     }
@@ -96,43 +112,43 @@ namespace XNA_GameEngine
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 Vector2 velocity = new Vector2(500.0f, 0.0f);
-                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), velocity);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, velocity);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
-                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), Vector2.Zero);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
             else if (demoNumber == 2)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
-                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
                 Vector2 velocity = new Vector2(-50.0f, 0.0f);
-                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), velocity);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), 0.8f, velocity);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
             else if (demoNumber == 3)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
-                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
                 Vector2 velocity = new Vector2(-200.0f, 0.0f);
-                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), velocity);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), 0.8f, velocity);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
             else if (demoNumber == 4)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
-                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
                 Vector2 velocity = new Vector2(-500.0f, 0.0f);
-                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), velocity);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), 0.8f, velocity);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
@@ -145,13 +161,22 @@ namespace XNA_GameEngine
             }
             else if (demoNumber == 6)
             {
+                top.SetElasticity(1.0f);
+                bottom.SetElasticity(1.0f);
+                right.SetElasticity(1.0f);
+                left.SetElasticity(1.0f);
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 for (int j = 0; j < 10; j++)
                 {
                     for (int i = 0; i < 5; i++)
                     {
+                        Color color = Color.Green;
+                        if ((i % 2) == (j % 2))
+                        {
+                            color = Color.Red;
+                        }
                         Vector2 velocity = new Vector2((float)(random.NextDouble() * 200), (float)(random.NextDouble() * 200));
-                        Debug.SquareObject squareObject = new Debug.SquareObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), new Vector2(50.0f), 0.0f, 50.0f * 50.0f, 0.0f, velocity);
+                        Debug.SquareObject squareObject = new Debug.SquareObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), new Vector2(50.0f), 0.0f, 50.0f * 50.0f, 1.0f, velocity, color);
                         squareObject.Initialize();
                         GameplayWorld.GetInstance().AddGameObject(squareObject);
                     }
@@ -164,7 +189,12 @@ namespace XNA_GameEngine
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        Debug.SquareObject squareObject = new Debug.SquareObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), new Vector2(50.0f), 0.0f, 50.0f * 50.0f, 1.0f, Vector2.Zero);
+                        Color color = Color.Green;
+                        if ((i % 2) == (j % 2))
+                        {
+                            color = Color.Red;
+                        }
+                        Debug.SquareObject squareObject = new Debug.SquareObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), new Vector2(50.0f), 0.0f, 50.0f * 50.0f, 1.0f, Vector2.Zero, color);
                         squareObject.Initialize();
                         GameplayWorld.GetInstance().AddGameObject(squareObject);
                     }
@@ -177,10 +207,10 @@ namespace XNA_GameEngine
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
 
-                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
-                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), Vector2.Zero);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
@@ -191,18 +221,13 @@ namespace XNA_GameEngine
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
 
-                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
-                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
-
-            Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
-            Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
-            Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();
-            Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
 
             bottom.Initialize();
             top.Initialize();

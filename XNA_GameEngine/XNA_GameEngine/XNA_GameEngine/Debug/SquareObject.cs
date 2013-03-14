@@ -12,32 +12,20 @@ using XNA_GameEngine.Network;
 
 namespace XNA_GameEngine.Debug
 {
-    class CircleObject : GameObject
+    class SquareObject : GameObject
     {
-        private float m_fRadius;
+        private Vector2 m_vSize;
         private float m_fMass;
-        private float m_fElasticity;
         private Vector2 m_vInitialVelocity;
+        private float m_fElasticity;
         private Color m_color;
 
-        public CircleObject(Vector2 position, float radius, double rotation, float mass, float elasticity, Vector2 initialVelocity)
+        public SquareObject(Vector2 position, Vector2 size, double rotation, float mass, float elasticity, Vector2 initialVelocity, Color color)
         {
             m_vPosition = position;
             m_fRotation = rotation;
-            m_fRadius = radius;
-            m_fScale = new Vector2(radius / 64.5f);
-            m_fMass = mass;
-            m_vInitialVelocity = initialVelocity;
-            m_fElasticity = elasticity;
-            m_color = Color.Green;
-        }
-
-        public CircleObject(Vector2 position, float radius, double rotation, float mass, float elasticity, Vector2 initialVelocity, Color color)
-        {
-            m_vPosition = position;
-            m_fRotation = rotation;
-            m_fRadius = radius;
-            m_fScale = new Vector2(radius / 64.5f);
+            m_vSize = size;
+            m_fScale = size / new Vector2(129.0f);
             m_fMass = mass;
             m_vInitialVelocity = initialVelocity;
             m_fElasticity = elasticity;
@@ -48,18 +36,17 @@ namespace XNA_GameEngine.Debug
         {
             base.Initialize();
 
-            // Add render component.
-            String assetName = "circle";
+            String assetName = "square";
             if (m_color == Color.Red)
             {
-                assetName = "red_circle";
+                assetName = "red_square";
             }
+
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
             AddComponent(renderObject);
-            Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_fRadius);
+            Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(m_vSize);
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, m_fMass, collider);
             physicsObject.SetVelocity(m_vInitialVelocity);
-            physicsObject.SetElasticity(m_fElasticity);
             AddComponent(physicsObject);
         }
     }
