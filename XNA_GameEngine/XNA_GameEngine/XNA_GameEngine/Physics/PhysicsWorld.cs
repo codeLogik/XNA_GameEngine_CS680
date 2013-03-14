@@ -36,8 +36,8 @@ namespace XNA_GameEngine.Physics
 
         public Vector2 GetGravity()
         {
-            return Vector2.Zero;
-           // return m_vGravity;
+           // return Vector2.Zero;
+            return m_vGravity;
         }
 
         static public PhysicsWorld GetInstance()

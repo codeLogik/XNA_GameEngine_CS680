@@ -39,5 +39,6 @@ namespace XNA_GameEngine.Physics
         {
             return "BoundingBox2D [ " + m_vTopLeft + " , " + m_vBottomRight + " ]";
         }
+
     }
 }

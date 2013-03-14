@@ -23,11 +23,11 @@ namespace XNA_GameEngine.Debug
             m_vPosition = new Vector2(300.0f, 100.0f);
 
             // Add render component.
-            String assetName = "square";
+            String assetName = "circle";
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
             AddComponent(renderObject);
-          //  Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_vPosition, 64.5f);
-            Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(new Vector2(129.0f));
+            Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_vPosition, 64.5f);
+          //  Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(new Vector2(129.0f));
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 50.0f, collider);
             AddComponent(physicsObject);
         }

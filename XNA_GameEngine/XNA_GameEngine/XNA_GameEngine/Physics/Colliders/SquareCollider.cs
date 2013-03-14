@@ -54,6 +54,19 @@ namespace XNA_GameEngine.Physics.Colliders
         {
             return mass * (m_vSize.X * m_vSize.X + m_vSize.Y + m_vSize.Y) / 12.0f;
         }
+
+        public Boolean IsPointInside(Vector2 point)
+        {
+            Vector2 toPoint = point - GetParent().GetParent().GetPosition();
+            Matrix rotation = Matrix.CreateRotationZ((float)-GetParent().GetParent().GetRotation());
+            toPoint = Vector2.Transform(toPoint, rotation);
+
+            if (toPoint.X < m_vertices[1].X || toPoint.X > m_vertices[3].X || toPoint.Y < m_vertices[1].Y || toPoint.Y > m_vertices[3].Y)
+            {
+                return false;
+            }
+            return true;
+        }
         
         public override Collision CollidesWith(SquareCollider other)
         {
@@ -111,8 +124,8 @@ namespace XNA_GameEngine.Physics.Colliders
                             {
                                 axisOfCollision = -axisOfCollision;
                             }
-                            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
-                            return collision;
+                            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), Vector2.Zero);
+                            return collision;                                                               
                         }
                     }
                 }
@@ -171,19 +184,45 @@ namespace XNA_GameEngine.Physics.Colliders
                         {
                             axisOfCollision = -axisOfCollision;
                         }
-                        Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
+
+                        Vector2 resolveOverlap = Vector2.Zero;
+                        for (i = 0; i < 4; i++)
+                        {
+                            Vector2 worldVertex = base.TransformToWorld(m_vertices[i]);
+                            Vector2 dirToPoint = worldVertex - location;
+                            if (Vector2.Dot(axisOfCollision, dirToPoint) > 0)
+                            {
+                                Vector2 temp = (Vector2.Dot(axisOfCollision, dirToPoint) * axisOfCollision);
+                                if (temp.LengthSquared() > resolveOverlap.LengthSquared())
+                                {
+                                    resolveOverlap = temp;
+                                }
+                            }
+                        }
+
+                        Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), resolveOverlap);
                         return collision;
                     }
                 }
             }
             if (p == 1)
             {
-                XNA_GameEngine.Debug.DebugTools.Report("Only One point!");
                 Vector2 location = collisionPoints[0];
                 Matrix rotation = Matrix.CreateRotationZ((float)GetParent().GetParent().GetRotation());
                 Vector2 axisOfCollision = Vector2.Transform(m_sideNormals[collidingEdge], rotation);
 
-                Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
+                Vector2 pointA = other.TransformToWorld(other.GetLocalA());
+                Vector2 pointB = other.TransformToWorld(other.GetLocalB());
+
+                Vector2 resolveOverlap = Vector2.Zero;
+                if (IsPointInside(pointA)) {
+                    resolveOverlap = Vector2.Dot(-axisOfCollision, pointA - location) * -axisOfCollision;
+                }
+                else if (IsPointInside(pointB)) {
+                    resolveOverlap = Vector2.Dot(-axisOfCollision, pointB - location) * -axisOfCollision;
+                }
+
+                Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), resolveOverlap);
                 return collision;
             }
             return null;
@@ -233,7 +272,7 @@ namespace XNA_GameEngine.Physics.Colliders
             location = location / p;
             Vector2 axisOfCollision = other.GetOrigin() - location;
             axisOfCollision.Normalize();
-            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other));
+            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), Vector2.Zero);
             return collision;
         }
 

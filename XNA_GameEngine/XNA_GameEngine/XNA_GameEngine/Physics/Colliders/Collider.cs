@@ -28,21 +28,12 @@ namespace XNA_GameEngine.Physics.Colliders
         private CollisionPoint m_collisionPoint;
         private Vector2 m_vResolveOverlap;
 
-    /*    public Collision()
-        {
-            m_vResolveOverlap = Vector2.Zero;
-        }*/
-
-        public Collision(CollisionPoint point)
+        public Collision(CollisionPoint point, Vector2 resolve)
         {
             m_collisionPoint = point;
-            m_vResolveOverlap = Vector2.Zero;
+            m_vResolveOverlap = resolve;
         }
 
-     /*   public void AddCollisionPoint(CollisionPoint point) {
-            m_collisionPoints.AddLast(point);
-        }
-        */
         public void SetResolveOverlap(Vector2 resolveOverlap)
         {
             m_vResolveOverlap = resolveOverlap;
@@ -55,34 +46,17 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public void ReverseCollision()
         {
-            /*
-            LinkedList<CollisionPoint>.Enumerator enumerator = m_collisionPoints.GetEnumerator();
-            while(enumerator.MoveNext())
-            {
-                CollisionPoint point = enumerator.Current;
-                ICollider temp = m_collisionPoint.ThisCollider;
-                point.ThisCollider = point.OtherCollider;
-                point.OtherCollider = temp;
-                point.AxisOfCollision = (point.AxisOfCollision * -1);
-
-            }*/
-
             ICollider temp = m_collisionPoint.ThisCollider;
             m_collisionPoint.ThisCollider = m_collisionPoint.OtherCollider;
             m_collisionPoint.OtherCollider = temp;
             m_collisionPoint.AxisOfCollision = (m_collisionPoint.AxisOfCollision * -1);
+            m_vResolveOverlap = -m_vResolveOverlap;
         }
 
         public CollisionPoint GetCollisionPoint()
         {
             return m_collisionPoint;
         }
-
-        /*
-        public LinkedList<CollisionPoint> GetPoints()
-        {
-            return m_collisionPoints;
-        }*/
     }
 
     abstract class ICollider

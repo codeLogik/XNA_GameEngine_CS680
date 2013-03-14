@@ -66,7 +66,7 @@ namespace XNA_GameEngine.Physics.Colliders
             }
 
             Vector2 pointOfCollision = myPointA + (distAlongThis * (myPointB - myPointA));
-            Collision collision = new Collision(new CollisionPoint(pointOfCollision, Vector2.Zero, this, other));
+            Collision collision = new Collision(new CollisionPoint(pointOfCollision, Vector2.Zero, this, other), Vector2.Zero);
             return collision;
         }
 

@@ -79,7 +79,8 @@ namespace XNA_GameEngine.Physics.Colliders
                 Vector2 pointOfCollision = other.TransformToWorld(other.GetLocalA()) + (distAlongLine * (other.TransformToWorld(other.GetLocalB()) - other.TransformToWorld(other.GetLocalA())));
                 Vector2 axisOfCollision = pointOfCollision - myWorldOrigin;
                 axisOfCollision.Normalize();
-                Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
+                Vector2 resolveOverlap = (axisOfCollision * m_fRadius) - (pointOfCollision - GetOrigin());
+                Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other), resolveOverlap);
                 return collision;
             }
             else
@@ -102,7 +103,8 @@ namespace XNA_GameEngine.Physics.Colliders
                         Vector2 pointOfCollision = other.TransformToWorld(other.GetLocalA()) + (distAlongLine * (other.TransformToWorld(other.GetLocalB()) - other.TransformToWorld(other.GetLocalA())));
                         Vector2 axisOfCollision = pointOfCollision - myWorldOrigin;
                         axisOfCollision.Normalize();
-                        Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
+                        Vector2 resolveOverlap = (axisOfCollision * m_fRadius) - (pointOfCollision - GetOrigin());
+                        Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other), resolveOverlap);
                         return collision;
                     }
                 }
@@ -116,13 +118,15 @@ namespace XNA_GameEngine.Physics.Colliders
                     if (distAlongLine < 0 || distAlongLine > 1)
                     {
                         axisOfCollision.Normalize();
-                        Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
+                        Vector2 resolveOverlap = (axisOfCollision * m_fRadius) - (pointOfCollision - GetOrigin());
+                        Collision collision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other), resolveOverlap);
                         return collision;
                     }
                     pointOfCollision = (pointOfCollision + other.TransformToWorld(other.GetLocalA()) + (distAlongLine * (other.TransformToWorld(other.GetLocalB()) - other.TransformToWorld(other.GetLocalA())))) / 2.0f;
                     axisOfCollision = pointOfCollision - myWorldOrigin;
                     axisOfCollision.Normalize();
-                    Collision averageCollision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other));
+                    Vector2 resolveOverlap2 = (axisOfCollision * m_fRadius) - (pointOfCollision - GetOrigin());
+                    Collision averageCollision = new Collision(new CollisionPoint(pointOfCollision, axisOfCollision, this, other), resolveOverlap2);
                     return averageCollision;
                 }
             }
@@ -147,7 +151,9 @@ namespace XNA_GameEngine.Physics.Colliders
 
                 directionOfCollision.Normalize();
                 Vector2 pointOfCollision = myOrigin + (directionOfCollision * m_fRadius);
-                Collision collision = new Collision(new CollisionPoint(pointOfCollision, directionOfCollision, this, other));
+                float overlapDistance = (m_fRadius + other.m_fRadius) - distance;
+                Vector2 resolveOverlap = directionOfCollision * overlapDistance;
+                Collision collision = new Collision(new CollisionPoint(pointOfCollision, directionOfCollision, this, other), resolveOverlap);
                 return collision;
             }
             return null;
