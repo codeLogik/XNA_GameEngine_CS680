@@ -43,11 +43,16 @@ namespace XNA_GameEngine.Debug
             }
 
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
-            AddComponent(renderObject);
+
             Physics.Colliders.SquareCollider collider = new Physics.Colliders.SquareCollider(m_vSize);
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, m_fMass, collider);
             physicsObject.SetVelocity(m_vInitialVelocity);
+
+            Network.NetworkObject networkObject = new Network.NetworkObject(this);
+
+            AddComponent(renderObject);
             AddComponent(physicsObject);
+            AddComponent(networkObject);
         }
     }
 }

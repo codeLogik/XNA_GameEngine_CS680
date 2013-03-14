@@ -11,6 +11,6 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartArguments>server 192.168.1.85</StartArguments>
+    <StartArguments>client 10.10.10.111</StartArguments>
   </PropertyGroup>
 </Project>

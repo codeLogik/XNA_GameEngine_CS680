@@ -37,7 +37,11 @@ namespace XNA_GameEngine.Debug
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, float.MaxValue, collider);
             physicsObject.SetElasticity(m_fElasticity);
             physicsObject.Immobilize();
+
+            Network.NetworkObject networkObject = new Network.NetworkObject(this);
+
             AddComponent(physicsObject);
+            AddComponent(networkObject);
         }
     }
 }

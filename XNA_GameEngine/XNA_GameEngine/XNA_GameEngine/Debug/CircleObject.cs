@@ -55,12 +55,15 @@ namespace XNA_GameEngine.Debug
                 assetName = "red_circle";
             }
             Rendering.RenderObject renderObject = new Rendering.RenderObject(this, assetName);
-            AddComponent(renderObject);
+            Network.NetworkObject networkObject = new Network.NetworkObject(this);
             Physics.Colliders.CircleCollider collider = new Physics.Colliders.CircleCollider(m_fRadius);
             Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, m_fMass, collider);
             physicsObject.SetVelocity(m_vInitialVelocity);
             physicsObject.SetElasticity(m_fElasticity);
+
+            AddComponent(renderObject);
             AddComponent(physicsObject);
+            AddComponent(networkObject);
         }
     }
 }

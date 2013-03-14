@@ -75,7 +75,7 @@ namespace XNA_GameEngine
             // 7: Stacked Boxes Demo
             // 8: Single Player Square Object (controlled by arrow keys) with some other objects around.
 
-            int demoNumber = 6;
+            int demoNumber = 10;
 
             Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
@@ -220,8 +220,29 @@ namespace XNA_GameEngine
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
+                playerObject.SetPlayerID(0);
                 playerObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(playerObject);
+
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+            }
+            else if (demoNumber == 10)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
+                playerObject.SetPlayerID(0);
+                playerObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(playerObject);
+
+                Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject(new Vector2(400.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "red_square");
+                playerObject2.SetPlayerID(1);
+                playerObject2.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(playerObject2);
 
                 Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), 0.8f, Vector2.Zero);
                 circleObject.Initialize();
