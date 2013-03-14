@@ -131,7 +131,7 @@ namespace XNA_GameEngine.Network
                         NetworkObject netObject = m_GONetComponents[netGOstate.m_goRef];
                         if (netObject.GetParent().GetPlayerID() == CoreMain.s_localPlayer)
                         {
-                            Debug.DebugTools.Report("[Network] (packet): NetGO Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
+                            //Debug.DebugTools.Report("[Network] (packet): NetGO Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
                         }
                         netObject.UpdateFromNetwork(netGOstate);
                     }
@@ -180,7 +180,7 @@ namespace XNA_GameEngine.Network
                 netClient.SendState(netGOstate);
                 if (netObj.GetParent().GetPlayerID() == CoreMain.s_localPlayer)
                 {
-                    Debug.DebugTools.Report("[Network] (packet): NetGO sent Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
+                    //Debug.DebugTools.Report("[Network] (packet): NetGO sent Position is x: " + netGOstate.m_position.x + " y: " + netGOstate.m_position.y);
                 }
             }
         }
