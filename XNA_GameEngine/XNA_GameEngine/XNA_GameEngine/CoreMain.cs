@@ -65,8 +65,8 @@ namespace XNA_GameEngine
             // Create a new SpriteBatch, which can be used to draw textures.
             Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject("square");
             Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject("square2");
-            Debug.DebugColliderObject collider = new Debug.DebugColliderObject();
-            Debug.DebugColliderObject2 collider2 = new Debug.DebugColliderObject2();
+            Debug.DebugColliderObject collider = new Debug.DebugColliderObject("circle");
+            Debug.DebugColliderObject2 collider2 = new Debug.DebugColliderObject2("circle");
             Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
             Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();

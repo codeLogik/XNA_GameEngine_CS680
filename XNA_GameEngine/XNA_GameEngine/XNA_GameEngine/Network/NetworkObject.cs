@@ -27,6 +27,7 @@ namespace XNA_GameEngine.Network
             // update position if we are the server as we have authority.
             m_netState.m_goRef = m_ownerGO.GetRef();
             m_netState.m_position = new NVec2(m_ownerGO.GetPosition());
+            m_netState.m_rotation = m_ownerGO.GetRotation();
             m_netState.m_currentFrameNumber = GameplayWorld.GetInstance().GetCurrentFrameNumber();
         }
 
@@ -34,6 +35,7 @@ namespace XNA_GameEngine.Network
         {
             // Update the game object state from the network GO state.
             m_ownerGO.SetPosition(netGOstate.m_position.GetVector2());
+            m_ownerGO.SetRotation(netGOstate.m_rotation);
         }
 
         public NetGOState GetCurrentNetState()
