@@ -10,12 +10,10 @@ namespace XNA_GameEngine.Physics.Colliders
 {
     class CircleCollider : ICollider
     {
-        private Vector2 m_vOrigin;
         private float m_fRadius;
 
-        public CircleCollider(Vector2 origin, float radius)
+        public CircleCollider(float radius)
         {
-            m_vOrigin = origin;
             m_fRadius = radius;
         }
 

@@ -62,31 +62,99 @@ namespace XNA_GameEngine
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
-            Debug.DebugColliderObject collider = new Debug.DebugColliderObject();
-            Debug.DebugColliderObject2 collider2 = new Debug.DebugColliderObject2();
+            Random random = new Random();
+
+            // Set this to change which predefined demo is shown:
+            // 0: Gaseous Demo (many small circles)
+            // 1: Small mass object hitting large mass object Demo
+            // 2: large object squashing small object demo (low Velocity)
+            // 3: large object squashing small object demo (medium Velocity)
+            // 4: large object squashing small object demo (High Velocity)
+            // 5: One Circle object, controllable by arrow keys
+
+            int demoNumber = 5;
+
+            // Gaseous Demo
+            if (demoNumber == 0)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                for (int j = 0; j < 10; j++)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector2 velocity = new Vector2((float)(random.NextDouble() * 200), (float)(random.NextDouble() * 200));
+                        Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f + j * 60, 51.0f + i * 60), 25.0f, 0.0f, 10.0f, velocity);
+                        circleObject.Initialize();
+                        GameplayWorld.GetInstance().AddGameObject(circleObject);
+                    }
+                }
+            }
+            else if (demoNumber == 1)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                Vector2 velocity = new Vector2(500.0f, 0.0f);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), velocity);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), Vector2.Zero);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+            }
+            else if (demoNumber == 2)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+                Vector2 velocity = new Vector2(-50.0f, 0.0f);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), velocity);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+            }
+            else if (demoNumber == 3)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+                Vector2 velocity = new Vector2(-200.0f, 0.0f);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), velocity);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+            }
+            else if (demoNumber == 4)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                Debug.CircleObject circleObject = new Debug.CircleObject(new Vector2(51.0f, 340.0f), 25.0f, 0.0f, (float)(4 * Math.PI * 25.0f * 25.0f), Vector2.Zero);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+                Vector2 velocity = new Vector2(-500.0f, 0.0f);
+                circleObject = new Debug.CircleObject(new Vector2(480.0f, 340.0f), 200.0f, 0.0f, (float)(4 * Math.PI * 200.0f * 200.0f), velocity);
+                circleObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(circleObject);
+            }
+            else if (demoNumber == 5)
+            {
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject();
+                playerObject.Initialize();
+                GameplayWorld.GetInstance().AddGameObject(playerObject);
+            }
+
             Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
             Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();
             Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
-            playerObject.Initialize();
-            collider.Initialize();
-            collider2.Initialize();
+
             bottom.Initialize();
             top.Initialize();
             left.Initialize();
             right.Initialize();
-            GameplayWorld.GetInstance().AddGameObject(playerObject);
-            GameplayWorld.GetInstance().AddGameObject(collider);
-            GameplayWorld.GetInstance().AddGameObject(collider2);
+
             GameplayWorld.GetInstance().AddGameObject(left);
             GameplayWorld.GetInstance().AddGameObject(right);
             GameplayWorld.GetInstance().AddGameObject(bottom);
             GameplayWorld.GetInstance().AddGameObject(top);
-
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>

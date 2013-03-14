@@ -124,12 +124,49 @@ namespace XNA_GameEngine.Physics.Colliders
                             {
                                 axisOfCollision = -axisOfCollision;
                             }
-                            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), Vector2.Zero);
+
+
+                            // ResolveOverlap will be the deepest corner into the other square
+                            Vector2 resolveOverlap = Vector2.Zero;
+                            for (int k = 0; k < 4; k++)
+                            {
+                                Vector2 worldVertex = base.TransformToWorld(m_vertices[k]);
+                                Vector2 dirToPoint = worldVertex - location;
+                                if (Vector2.Dot(axisOfCollision, dirToPoint) > 0)
+                                {
+                                    Vector2 temp = (Vector2.Dot(axisOfCollision, dirToPoint) * axisOfCollision);
+                                    if (temp.LengthSquared() > resolveOverlap.LengthSquared())
+                                    {
+                                        resolveOverlap = temp;
+                                    }
+                                }
+                            }
+
+                            // ResolveOverlap2 will be the deepest other corner into my square
+                            Vector2 resolveOverlap2 = Vector2.Zero;
+                            for (int k = 0; k < 4; k++)
+                            {
+                                Vector2 worldVertex = other.TransformToWorld(other.m_vertices[k]);
+                                Vector2 dirToPoint = worldVertex - location;
+                                if (Vector2.Dot(-axisOfCollision, dirToPoint) > 0)
+                                {
+                                    Vector2 temp = (Vector2.Dot(-axisOfCollision, dirToPoint) * -axisOfCollision);
+                                    if (temp.LengthSquared() > resolveOverlap.LengthSquared())
+                                    {
+                                        resolveOverlap2 = temp;
+                                    }
+                                }
+                            }
+
+                            resolveOverlap -= resolveOverlap2;
+
+                            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), resolveOverlap);
                             return collision;                                                               
                         }
                     }
                 }
             }
+
             return null;
         }
         
@@ -272,7 +309,27 @@ namespace XNA_GameEngine.Physics.Colliders
             location = location / p;
             Vector2 axisOfCollision = other.GetOrigin() - location;
             axisOfCollision.Normalize();
-            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), Vector2.Zero);
+
+            // ResolveOverlap will be the deepest corner into the circle
+            Vector2 resolveOverlap = Vector2.Zero;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 worldVertex = base.TransformToWorld(m_vertices[i]);
+                Vector2 dirToPoint = worldVertex - location;
+                if (Vector2.Dot(axisOfCollision, dirToPoint) > 0)
+                {
+                    Vector2 temp = (Vector2.Dot(axisOfCollision, dirToPoint) * axisOfCollision);
+                    if (temp.LengthSquared() > resolveOverlap.LengthSquared())
+                    {
+                        resolveOverlap = temp;
+                    }
+                }
+            }
+
+            // Add the distance that the circle overlaps into the square
+            resolveOverlap += ((location - other.GetOrigin()) - (-axisOfCollision) * other.GetRadius());
+
+            Collision collision = new Collision(new CollisionPoint(location, axisOfCollision, this, other), resolveOverlap);
             return collision;
         }
 
