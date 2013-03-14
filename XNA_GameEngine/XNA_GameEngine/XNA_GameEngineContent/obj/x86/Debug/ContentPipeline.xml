@@ -7,8 +7,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player.xnb</Output>
-      <Time>2013-03-12T21:48:48.735906-07:00</Time>
+      <Output>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player.xnb</Output>
+      <Time>2013-03-13T01:08:58.2337604-07:00</Time>
     </Item>
     <Item>
       <Source>debug_player2.bmp</Source>
@@ -16,8 +16,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player2.xnb</Output>
-      <Time>2013-03-12T21:46:29.4949419-07:00</Time>
+      <Output>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\debug_player2.xnb</Output>
+      <Time>2013-03-13T01:08:58.2337604-07:00</Time>
     </Item>
     <Item>
       <Source>circle.png</Source>
@@ -25,8 +25,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\circle.xnb</Output>
-      <Time>2013-03-12T21:48:48.7339059-07:00</Time>
+      <Output>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\circle.xnb</Output>
+      <Time>2013-03-13T01:08:58.2297602-07:00</Time>
     </Item>
     <Item>
       <Source>square.png</Source>
@@ -34,8 +34,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\square.xnb</Output>
-      <Time>2013-03-12T21:48:48.735906-07:00</Time>
+      <Output>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\square.xnb</Output>
+      <Time>2013-03-13T01:08:58.2367606-07:00</Time>
     </Item>
     <Item>
       <Source>square2.png</Source>
@@ -43,8 +43,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\square2.xnb</Output>
-      <Time>2013-03-12T23:22:31.0374832-07:00</Time>
+      <Output>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\square2.xnb</Output>
+      <Time>2013-03-13T01:08:58.2367606-07:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
@@ -52,39 +52,39 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngineContent\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngineContent\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Tom\Documents\GitHub\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngineContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngineContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Tom\Projects\XNA_GameEngine_CS680\XNA_GameEngine\XNA_GameEngine\XNA_GameEngine\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
-        <Value>2010-08-23T13:41:18-07:00</Value>
+        <Value>2010-08-23T12:41:18-07:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
-        <Value>2010-08-23T13:41:18-07:00</Value>
+        <Value>2010-08-23T12:41:18-07:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
-        <Value>2010-08-23T13:41:18-07:00</Value>
+        <Value>2010-08-23T12:41:18-07:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
-        <Value>2010-08-23T13:41:18-07:00</Value>
+        <Value>2010-08-23T12:41:18-07:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
-        <Value>2010-08-23T13:41:18-07:00</Value>
+        <Value>2010-08-23T12:41:18-07:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
-        <Value>2010-08-23T13:41:18-07:00</Value>
+        <Value>2010-08-23T12:41:18-07:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Windows\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
-        <Value>2013-02-12T22:00:09.9048985-08:00</Value>
+        <Value>2013-03-13T00:41:36.4838577-07:00</Value>
       </Assembly>
     </Assemblies>
   </Asset>

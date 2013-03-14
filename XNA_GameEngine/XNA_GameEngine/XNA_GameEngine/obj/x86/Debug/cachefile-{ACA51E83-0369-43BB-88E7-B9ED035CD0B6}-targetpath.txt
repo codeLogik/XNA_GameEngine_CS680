@@ -1,7 +1,0 @@
-Content\debug_player.xnb
-<<<<<<< HEAD
-Content\debug_player2.xnb
-=======
-Content\circle.xnb
-Content\square.xnb
->>>>>>> origin/physics
