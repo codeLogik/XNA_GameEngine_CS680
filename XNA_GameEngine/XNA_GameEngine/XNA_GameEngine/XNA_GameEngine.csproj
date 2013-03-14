@@ -90,6 +90,8 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -105,6 +107,7 @@
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CoreComponent.cs" />
@@ -116,6 +119,7 @@
     <Compile Include="Debug\SceneBoundingBoxBottom.cs" />
     <Compile Include="Debug\DebugColliderObject.cs" />
     <Compile Include="Debug\DebugPlayerObject.cs" />
+    <Compile Include="Debug\DebugPlayerRemoteObject.cs" />
     <Compile Include="Debug\DebugTools.cs" />
     <Compile Include="Debug\SceneBoundingBoxTop.cs" />
     <Compile Include="Gameplay\GameObject.cs" />
@@ -124,12 +128,15 @@
     <Compile Include="Network\LocalInput.cs" />
     <Compile Include="Network\NetGameState.cs" />
     <Compile Include="Network\NetGOState.cs" />
+    <Compile Include="Network\NetInputState.cs" />
     <Compile Include="Network\NetSynchronizedInput.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\NetworkDataTypes\NVec2.cs" />
     <Compile Include="Network\NetworkManager.cs" />
     <Compile Include="Network\NetworkObject.cs" />
     <Compile Include="Network\NetworkServer.cs" />
+    <Compile Include="Network\NetworkPacket.cs" />
+    <Compile Include="Network\NetworkThread.cs" />
     <Compile Include="Network\NFSM.cs" />
     <Compile Include="Physics\BoundingBox2D.cs" />
     <Compile Include="Physics\Colliders\CircleCollider.cs" />
@@ -182,7 +189,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -27,8 +28,7 @@ namespace XNA_GameEngine
 
         static public int MAX_PLAYERS = 4;
         static public int s_localPlayer = 0;
-        static public bool isServer = false;
-
+        
         public CoreMain()
         {
             m_graphics = new GraphicsDeviceManager(this);
@@ -46,7 +46,7 @@ namespace XNA_GameEngine
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
             // Initialize the singleton component managers and worlds.
-            NetworkManager.GetInstance().Initialize("localhost", 8888);
+            NetworkManager.GetInstance().Initialize();
             PhysicsWorld.GetInstance().Initialize();
             PhysicsWorld.GetInstance().SetGravity(new Vector2(0.0f, 100.0f));
             GameplayWorld.GetInstance().Initialize();
@@ -62,6 +62,11 @@ namespace XNA_GameEngine
         /// </summary>
         protected override void LoadContent()
         {
+            // Create a new SpriteBatch, which can be used to draw textures.
+            Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject("square");
+            Debug.DebugPlayerObject playerObject2 = new Debug.DebugPlayerObject("square2");
+            Debug.DebugColliderObject collider = new Debug.DebugColliderObject("circle");
+            Debug.DebugColliderObject2 collider2 = new Debug.DebugColliderObject2("circle");
             Random random = new Random();
 
             // Set this to change which predefined demo is shown:
@@ -203,16 +208,28 @@ namespace XNA_GameEngine
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
             Debug.SceneBoundingBoxLeft left = new Debug.SceneBoundingBoxLeft();
             Debug.SceneBoundingBoxRight right = new Debug.SceneBoundingBoxRight();
-
+            
             bottom.Initialize();
             top.Initialize();
             left.Initialize();
             right.Initialize();
 
+            // Set player ID's for player objects.
+            playerObject.SetPlayerID(0);
+            playerObject2.SetPlayerID(1);
+
+            // Add game objects to gameplay world.
+            GameplayWorld.GetInstance().AddGameObject(playerObject);
+            GameplayWorld.GetInstance().AddGameObject(playerObject2);
+            GameplayWorld.GetInstance().AddGameObject(collider);
+            GameplayWorld.GetInstance().AddGameObject(collider2);
             GameplayWorld.GetInstance().AddGameObject(left);
             GameplayWorld.GetInstance().AddGameObject(right);
             GameplayWorld.GetInstance().AddGameObject(bottom);
             GameplayWorld.GetInstance().AddGameObject(top);
+
+            // Set the starting position for the second player.            
+            playerObject2.SetPosition(new Vector2(280.0f, 380.0f));
         }
 
         /// <summary>
@@ -242,6 +259,10 @@ namespace XNA_GameEngine
             PhysicsWorld.GetInstance().Update(gameTime);
             SoundManager.GetInstance().Update();
 
+            // Run post update on any modules that need post update called on them.
+            NetworkManager.GetInstance().PostUpdate();
+
+            // Update the base XNA framework.
             base.Update(gameTime);
         }
 

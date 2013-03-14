@@ -49,6 +49,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="debug_player2.bmp">
+      <Name>debug_player2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="circle.png">
       <Name>circle</Name>
       <Importer>TextureImporter</Importer>
@@ -58,6 +65,13 @@
   <ItemGroup>
     <Compile Include="square.png">
       <Name>square</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="square2.png">
+      <Name>square2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

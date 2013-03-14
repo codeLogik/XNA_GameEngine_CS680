@@ -27,5 +27,19 @@ namespace XNA_GameEngine.Network
             m_inputState = 0;
             m_currentFrameNumber = 0;
         }
+
+        public InputState(UInt16 inputState, UInt64 currentFrameNumber)
+        {
+            m_inputState = inputState;
+            m_currentFrameNumber = currentFrameNumber;
+        }
+
+        public static InputState operator +(InputState lhs, InputState rhs)
+        {
+            return new InputState(
+                (UInt16)(lhs.m_inputState | rhs.m_inputState),
+                (lhs.m_currentFrameNumber > rhs.m_currentFrameNumber) ? lhs.m_currentFrameNumber : rhs.m_currentFrameNumber
+                );
+        }
     }
 }
