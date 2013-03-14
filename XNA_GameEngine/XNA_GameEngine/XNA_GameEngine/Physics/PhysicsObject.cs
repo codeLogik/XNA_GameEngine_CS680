@@ -92,7 +92,18 @@ namespace XNA_GameEngine.Physics
                 GetParent().SetPosition(newPosition);
                 m_vVelocity = newVelocity;
 
-                //TODO: Angular stuff
+                double originalRotation = GetParent().GetRotation();
+                double newRotation = originalRotation + (m_fAngularVelocity * elapsedTimeInSec);
+                while (newRotation > 2 * Math.PI)
+                {
+                    newRotation = newRotation - (2 * Math.PI);
+                }
+
+                while (newRotation < -2 * Math.PI)
+                {
+                    newRotation = newRotation + (2 * Math.PI);
+                }
+                GetParent().SetRotation(newRotation);
             }
             
             LinkedList<PhysicsObject> updatedObjects = PhysicsWorld.GetInstance().GetAlreadyUpdatedObjects();
@@ -102,23 +113,57 @@ namespace XNA_GameEngine.Physics
                 Collision collision = m_collider.CollidesWith(other);
                 if (collision != null)
                 {
-                    LinkedList<CollisionPoint> points = collision.GetPoints();
-                    Vector2 n = Vector2.Zero;
-                    foreach(CollisionPoint point in points) {
-                        n += point.AxisOfCollision;
-                    }
-                    XNA_GameEngine.Debug.DebugTools.Report("Number of points: " + points.Count());
-                    n.Normalize();
+               //     XNA_GameEngine.Debug.DebugTools.Report("");
 
-                    float tmp1 = Vector2.Dot(m_vVelocity, n);
-                    float tmp2 = Vector2.Dot(physObj.m_vVelocity, n);
+                    // This only ever returns one point now
+                    CollisionPoint point = collision.GetCollisionPoint();
+                    Vector2 axisOfCollision = point.AxisOfCollision;
+                    Vector2 pointOfCollision = point.WorldLocation;
+
+                    // Get impulse
+                    float tmp1 = Vector2.Dot(m_vVelocity, axisOfCollision);
+                    float tmp2 = Vector2.Dot(physObj.m_vVelocity, axisOfCollision);
                     if (m_bImmobile) tmp1 = 0.0f;
                     if (physObj.m_bImmobile) tmp2 = 0.0f;
 
                     double impulse = ((m_fElasticity + physObj.m_fElasticity + 1.0f) * (tmp2 - tmp1)) / ((1.0f / m_fMass) + (1.0f / physObj.m_fMass));
-                    Vector2 impulseVector = (float)impulse * n;
-                    m_vVelocity += (impulseVector / m_fMass);
-                    physObj.m_vVelocity -= (impulseVector / physObj.m_fMass);
+                    Vector2 impulseVector = (float)impulse * axisOfCollision;
+                    /*
+                    XNA_GameEngine.Debug.DebugTools.Report("Impulse Vector: " + impulseVector);
+
+                    XNA_GameEngine.Debug.DebugTools.Report("My Velocity: " + m_vVelocity);
+                    XNA_GameEngine.Debug.DebugTools.Report("Other Velocity: " + physObj.m_vVelocity);
+                    */
+                    // Apply impulse
+                    SetVelocity(GetVelocity() + (impulseVector / m_fMass));
+                    physObj.SetVelocity(physObj.GetVelocity() - (impulseVector / physObj.m_fMass));
+                    /*
+                    XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
+                    XNA_GameEngine.Debug.DebugTools.Report("Point of Collisin: " + pointOfCollision);
+                    */
+                    Vector2 originToCollision = pointOfCollision - GetParent().GetPosition();
+                    double crossProduct = impulseVector.X * originToCollision.Y - impulseVector.Y * originToCollision.X;
+                    m_fAngularVelocity -= (float) (crossProduct / m_collider.GetMomentOfInertia(m_fMass));
+
+                    originToCollision = pointOfCollision - physObj.GetParent().GetPosition();
+                    crossProduct = impulseVector.X * originToCollision.Y - impulseVector.Y * originToCollision.X;
+                    physObj.m_fAngularVelocity += ((float)crossProduct / physObj.m_collider.GetMomentOfInertia(physObj.m_fMass));
+
+                    Vector2 resolveOverlap = collision.GetResolveOverlap();
+                    XNA_GameEngine.Debug.DebugTools.Report("Overlap Distance: " + resolveOverlap);
+                    if(!m_bImmobile && !physObj.m_bImmobile) {
+                        GetParent().SetPosition(GetParent().GetPosition() - (resolveOverlap / 2.0f));
+                        physObj.GetParent().SetPosition(physObj.GetParent().GetPosition() + (resolveOverlap / 2.0f));
+                    }
+                    else if (!m_bImmobile)
+                    {
+                        GetParent().SetPosition(GetParent().GetPosition() - resolveOverlap);
+                    }
+                    else if (!physObj.m_bImmobile)
+                    {
+                        physObj.GetParent().SetPosition(physObj.GetParent().GetPosition() + resolveOverlap);
+                    }
+                    
                 }
             }
         }

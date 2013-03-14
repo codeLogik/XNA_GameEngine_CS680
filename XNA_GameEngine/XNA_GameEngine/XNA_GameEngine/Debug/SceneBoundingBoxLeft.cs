@@ -23,7 +23,7 @@ namespace XNA_GameEngine.Debug
             m_vPosition = new Vector2(0.0f, 0.0f);
 
             Physics.Colliders.LineCollider collider = new Physics.Colliders.LineCollider(new Vector2(0.0f, 0.0f), new Vector2(0.0f, 680.0f));
-            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, 1000000000000.0f, collider);
+            Physics.PhysicsObject physicsObject = new Physics.PhysicsObject(this, float.MaxValue, collider);
             physicsObject.SetElasticity(0.8f);
             physicsObject.Immobilize();
             AddComponent(physicsObject);
