@@ -34,6 +34,7 @@ namespace XNA_GameEngine.Network
             m_netState.m_velocity = new NVec2(physObj.GetVelocity());
             m_netState.m_position = new NVec2(m_ownerGO.GetPosition());
             m_netState.m_rotation = m_ownerGO.GetRotation();
+            m_netState.m_angularVelocity = physObj.GetAngularVelocity();
             m_netState.m_currentFrameNumber = GameplayWorld.GetInstance().GetCurrentFrameNumber();
         }
 
@@ -66,6 +67,7 @@ namespace XNA_GameEngine.Network
             
             // TODO @tom:  Add support for doing the same kind of interpolation as above for rotation and angular velocity.
             m_ownerGO.SetRotation(netGOstate.m_rotation);
+            physObj.SetAngularVelocity(netGOstate.m_angularVelocity);
 
             // Cache the previous network state
             m_previousNetState = netGOstate;

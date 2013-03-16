@@ -11,6 +11,7 @@ namespace XNA_GameEngine.Network
         public NetworkDataTypes.NVec2 m_velocity;
         public NetworkDataTypes.NVec2 m_position;
         public double m_rotation;
+        public float m_angularVelocity;
         public /*Guid*/int m_goRef;
 
         public NetGOState(UInt64 currentFrame)
