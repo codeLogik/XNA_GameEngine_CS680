@@ -10,6 +10,7 @@ namespace XNA_GameEngine.Physics
     class QuadNode
     {
         private LinkedList<PhysicsObject> m_physicsObjects;
+        private LinkedList<PhysicsObject> m_needFixing;
         private QuadNode m_parent;
         private QuadNode[] m_childNodes;
         private int m_iDepth;
@@ -83,6 +84,7 @@ namespace XNA_GameEngine.Physics
         
         public void UpdateObjects(GameTime time)
         {
+            m_needFixing = new LinkedList<PhysicsObject>();
             LinkedList<PhysicsObject> temp = m_physicsObjects;
             m_physicsObjects = new LinkedList<PhysicsObject>();
             foreach (PhysicsObject physObj in temp)
@@ -94,8 +96,8 @@ namespace XNA_GameEngine.Physics
                 // Check if the object moved at all
                 if (position != physObj.GetPosition() || angularRotation != physObj.GetRotation())
                 {
-                    // Move object to proper part in quad tree
-                    BubbleUpObject(physObj);
+                    // Put object in fixing list
+                    m_needFixing.AddLast(physObj);
                 }
                 else
                 {
@@ -108,6 +110,26 @@ namespace XNA_GameEngine.Physics
                 for (int i = 0; i < 4; i++)
                 {
                     m_childNodes[i].UpdateObjects(time);
+                }
+            }
+        }
+
+        public void FixTree()
+        {
+            if (m_needFixing != null)
+            {
+                foreach (PhysicsObject physObj in m_needFixing)
+                {
+                    BubbleUpObject(physObj);
+                }
+                m_needFixing = null;
+            }
+
+            if (m_bHasSubdivided)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    m_childNodes[i].FixTree();
                 }
             }
         }
@@ -224,9 +246,13 @@ namespace XNA_GameEngine.Physics
     class QuadTree
     {
         QuadNode root;
+        int m_numUpdates;
+        int reapChildrenEvery;
+
         public QuadTree(BoundingBox2D boundaries)
         {
             root = new QuadNode(null, boundaries, 0);
+            reapChildrenEvery = 10;
         }
 
         public void AddPhysicsObject(PhysicsObject physObj)
@@ -237,8 +263,14 @@ namespace XNA_GameEngine.Physics
         public void UpdateObjects(GameTime time)
         {
             root.UpdateObjects(time);
+            root.FixTree();
             root.CollideObjects();
-            root.ReapEmptyChildren();
+            m_numUpdates++;
+            if (m_numUpdates >= reapChildrenEvery)
+            {
+                m_numUpdates = 0;
+                root.ReapEmptyChildren();
+            }
         }
     }
 }

@@ -164,7 +164,7 @@ namespace XNA_GameEngine.Physics
             Collision collision = m_collider.CollidesWith(other);
             if (collision != null)
             {
-            //    XNA_GameEngine.Debug.DebugTools.Report("");
+        //        XNA_GameEngine.Debug.DebugTools.Report("");
 
                 // This only ever returns one point now
                 CollisionPoint point = collision.GetCollisionPoint();
@@ -193,7 +193,7 @@ namespace XNA_GameEngine.Physics
                 SetVelocity(GetVelocity() + (impulseVector / m_fMass));
                 physObj.SetVelocity(physObj.GetVelocity() - (impulseVector / physObj.m_fMass));
                     
-                // XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
+          //       XNA_GameEngine.Debug.DebugTools.Report("Axis of Colliision: " + axisOfCollision); 
                 //  XNA_GameEngine.Debug.DebugTools.Report("Point of Collisin: " + pointOfCollision);
 
                 crossA = distanceFromCenterA.X * impulseVector.Y - distanceFromCenterA.Y * impulseVector.X;

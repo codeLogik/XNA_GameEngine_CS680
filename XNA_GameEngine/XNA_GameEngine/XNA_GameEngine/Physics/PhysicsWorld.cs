@@ -15,11 +15,16 @@ namespace XNA_GameEngine.Physics
         private QuadTree m_physicsObjects;
         private Vector2 m_vGravity;
 
+        private int totalSpan;
+        private int numUpdates;
+
         private static PhysicsWorld g_PhysicsWorld;
 
         public PhysicsWorld()
         {
             m_vGravity = Vector2.Zero;
+            totalSpan = 0;
+            numUpdates = 0;
         }
 
         public void Initialize(PhysicsScene scene)
@@ -58,7 +63,13 @@ namespace XNA_GameEngine.Physics
 
         public void Update(GameTime gameTime)
         {
+            var stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
             m_physicsObjects.UpdateObjects(gameTime);
+            stopWatch.Stop();
+            totalSpan += stopWatch.Elapsed.Milliseconds;
+            numUpdates++;
+      //      XNA_GameEngine.Debug.DebugTools.Report("Average Update Time: " + totalSpan / numUpdates);
         }
     }
 }
