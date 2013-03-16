@@ -11,8 +11,8 @@ namespace XNA_GameEngine.Physics
 {
     class PhysicsWorld
     {
-        private LinkedList<PhysicsObject> m_physicsObjects;
-        private LinkedList<PhysicsObject> m_updatedPhysicsObjects;
+        private PhysicsScene m_scene;
+        private QuadTree m_physicsObjects;
         private Vector2 m_vGravity;
 
         private static PhysicsWorld g_PhysicsWorld;
@@ -20,13 +20,12 @@ namespace XNA_GameEngine.Physics
         public PhysicsWorld()
         {
             m_vGravity = Vector2.Zero;
-            m_physicsObjects = new LinkedList<PhysicsObject>();
-            m_updatedPhysicsObjects = new LinkedList<PhysicsObject>();
         }
 
-        public void Initialize()
+        public void Initialize(PhysicsScene scene)
         {
-
+            m_scene = scene;
+            m_physicsObjects = new QuadTree(m_scene.GetBoundaries());
         }
 
         public void SetGravity(Vector2 gravity)
@@ -49,28 +48,17 @@ namespace XNA_GameEngine.Physics
             return g_PhysicsWorld;
         }
 
-        public LinkedList<PhysicsObject> GetAlreadyUpdatedObjects()
-        {
-            return m_updatedPhysicsObjects;
-        }
-
         public void AddPhysicsObject(ICoreComponent coreComponent)
         {
             if (coreComponent != null && coreComponent.GetComponentType() == ICoreComponent.ComponentType.COMPONENT_Physics)
             {
-                m_physicsObjects.AddLast((PhysicsObject)coreComponent);
+                m_physicsObjects.AddPhysicsObject((PhysicsObject)coreComponent);
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            m_updatedPhysicsObjects.Clear();
-            // Simulate the physics for the frame.
-            foreach (PhysicsObject phyObj in m_physicsObjects)
-            {
-                phyObj.Update(gameTime);
-                m_updatedPhysicsObjects.AddLast(phyObj);
-            }
+            m_physicsObjects.UpdateObjects(gameTime);
         }
     }
 }

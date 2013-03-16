@@ -9,7 +9,7 @@ namespace XNA_GameEngine.Debug
     {
         static public void Report(String log)
         {
-            System.Diagnostics.Debug.WriteLine(log);
+            Console.WriteLine(log);
         }
 
         static public void Log(String system, String activity, String message)

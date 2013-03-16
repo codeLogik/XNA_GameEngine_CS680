@@ -62,6 +62,7 @@ namespace XNA_GameEngine.Physics.Colliders
     abstract class ICollider
     {
         protected PhysicsObject m_parent;
+        protected BoundingBox2D m_boundingBox;
 
         public ICollider()
         {
@@ -80,13 +81,13 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public Vector2 TransformToWorld(Vector2 point)
         {
-            double rotationVal = GetParent().GetParent().GetRotation();
+            double rotationVal = GetParent().GetRotation();
             if (rotationVal != 0)
             {
-                Matrix rotation = Matrix.CreateRotationZ((float)GetParent().GetParent().GetRotation());
-                return GetParent().GetParent().GetPosition() + Vector2.Transform(point, rotation);
+                Matrix rotation = Matrix.CreateRotationZ((float)GetParent().GetRotation());
+                return GetParent().GetPosition() + Vector2.Transform(point, rotation);
             }
-            return GetParent().GetParent().GetPosition() + point;
+            return GetParent().GetPosition() + point;
         }
 
         public Collision CollidesWith(ICollider other)
@@ -106,16 +107,9 @@ namespace XNA_GameEngine.Physics.Colliders
             return null;
         }
 
-        public bool BoundingBoxesOverlap(Vector2 aTopLeft, Vector2 aBottomRight, Vector2 bTopLeft, Vector2 bBottomRight)
+        public void ClearBoundingBox()
         {
-            if (aTopLeft.X > bBottomRight.X ||
-                aBottomRight.X < bTopLeft.X ||
-                aTopLeft.Y > bBottomRight.Y ||
-                aBottomRight.Y < bTopLeft.Y)
-            {
-                return false;
-            }
-            return true;
+            m_boundingBox = null;
         }
 
         public abstract BoundingBox2D GetBoundingBox();

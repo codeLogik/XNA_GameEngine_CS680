@@ -47,7 +47,7 @@ namespace XNA_GameEngine
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
             // Initialize the singleton component managers and worlds.
             NetworkManager.GetInstance().Initialize();
-            PhysicsWorld.GetInstance().Initialize();
+            PhysicsWorld.GetInstance().Initialize(new PhysicsScene(new BoundingBox2D(Vector2.Zero, new Vector2(960.0f, 680.0f))));
             PhysicsWorld.GetInstance().SetGravity(new Vector2(0.0f, 100.0f));
             GameplayWorld.GetInstance().Initialize();
             Renderer.GetInstance().Initialize(this, GraphicsDevice);
@@ -72,10 +72,13 @@ namespace XNA_GameEngine
             // 4: large object squashing small object demo (High Velocity)
             // 5: Single Player Square Object (controlled by arrow keys)
             // 6: Gaseous Squares Demo (many small squares)
-            // 7: Stacked Boxes Demo
-            // 8: Single Player Square Object (controlled by arrow keys) with some other objects around.
+            // 7: Gaseous Rectangles Demo (many small rectangles) collision intensive demo
+            // 8: Stacked Boxes Demo
+            // 9: Single Player Square Object (controlled by arrow keys) with small sphere and large sphere
+            // 10: Single Player Square Object (controlled by arrow keys) with two small spheres
+            // 11: Network play demo
 
-            int demoNumber = 10;
+            int demoNumber = 6;
 
             Debug.SceneBoundingBoxTop top = new Debug.SceneBoundingBoxTop();
             Debug.SceneBoundingBoxBottom bottom = new Debug.SceneBoundingBoxBottom();
@@ -185,6 +188,29 @@ namespace XNA_GameEngine
             }
             else if (demoNumber == 7)
             {
+                top.SetElasticity(1.0f);
+                bottom.SetElasticity(1.0f);
+                right.SetElasticity(1.0f);
+                left.SetElasticity(1.0f);
+                PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
+                for (int j = 0; j < 18; j++)
+                {
+                    for (int i = 0; i < 20; i++)
+                    {
+                        Color color = Color.Green;
+                        if ((i % 2) == (j % 2))
+                        {
+                            color = Color.Red;
+                        }
+                        Vector2 velocity = new Vector2((float)(random.NextDouble() * 400) - 200, (float)(random.NextDouble() * 400) - 200);
+                        Debug.SquareObject squareObject = new Debug.SquareObject(new Vector2(1.0f + j * 53.22f, 1.0f + i * 33.9f), new Vector2(50.0f, 10.0f), 0.0f, 50.0f * 50.0f, 1.0f, velocity, color);
+                        squareObject.Initialize();
+                        GameplayWorld.GetInstance().AddGameObject(squareObject);
+                    }
+                }
+            }
+            else if (demoNumber == 8)
+            {
                 PhysicsWorld.GetInstance().SetGravity(new Vector2(0.0f, 100.0f));
                 for (int j = 0; j < 10; j++)
                 {
@@ -201,7 +227,7 @@ namespace XNA_GameEngine
                     }
                 }
             }
-            else if (demoNumber == 8)
+            else if (demoNumber == 9)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
@@ -216,7 +242,7 @@ namespace XNA_GameEngine
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
-            else if (demoNumber == 9)
+            else if (demoNumber == 10)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
@@ -231,7 +257,7 @@ namespace XNA_GameEngine
                 circleObject.Initialize();
                 GameplayWorld.GetInstance().AddGameObject(circleObject);
             }
-            else if (demoNumber == 10)
+            else if (demoNumber == 11)
             {
                 PhysicsWorld.GetInstance().SetGravity(Vector2.Zero);
                 Debug.DebugPlayerObject playerObject = new Debug.DebugPlayerObject(new Vector2(100.0f, 100.0f), new Vector2(129.0f, 129.0f), 0.0f, 129.0f * 129.0f, 0.8f, "square");
@@ -261,9 +287,6 @@ namespace XNA_GameEngine
             GameplayWorld.GetInstance().AddGameObject(right);
             GameplayWorld.GetInstance().AddGameObject(bottom);
             GameplayWorld.GetInstance().AddGameObject(top);
-
-            // Set the starting position for the second player.            
-      //      playerObject2.SetPosition(new Vector2(280.0f, 380.0f));
         }
 
         /// <summary>

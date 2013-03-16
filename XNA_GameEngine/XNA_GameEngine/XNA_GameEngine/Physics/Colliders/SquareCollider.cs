@@ -57,8 +57,8 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public Boolean IsPointInside(Vector2 point)
         {
-            Vector2 toPoint = point - GetParent().GetParent().GetPosition();
-            Matrix rotation = Matrix.CreateRotationZ((float)-GetParent().GetParent().GetRotation());
+            Vector2 toPoint = point - GetParent().GetPosition();
+            Matrix rotation = Matrix.CreateRotationZ((float)-GetParent().GetRotation());
             toPoint = Vector2.Transform(toPoint, rotation);
 
             if (toPoint.X < m_vertices[1].X || toPoint.X > m_vertices[3].X || toPoint.Y < m_vertices[1].Y || toPoint.Y > m_vertices[3].Y)
@@ -119,7 +119,7 @@ namespace XNA_GameEngine.Physics.Colliders
                             axisOfCollision.X = -axisOfCollision.Y;
                             axisOfCollision.Y = tempX;
                             axisOfCollision.Normalize();
-                            Vector2 outOfSelf = location - GetParent().GetParent().GetPosition();
+                            Vector2 outOfSelf = location - GetParent().GetPosition();
                             if (Vector2.Dot(axisOfCollision, outOfSelf) < 0)
                             {
                                 axisOfCollision = -axisOfCollision;
@@ -216,7 +216,7 @@ namespace XNA_GameEngine.Physics.Colliders
                         axisOfCollision.X = -axisOfCollision.Y;
                         axisOfCollision.Y = tempX;
                         axisOfCollision.Normalize();
-                        Vector2 outOfSelf = location - GetParent().GetParent().GetPosition();
+                        Vector2 outOfSelf = location - GetParent().GetPosition();
                         if (Vector2.Dot(axisOfCollision, outOfSelf) < 0)
                         {
                             axisOfCollision = -axisOfCollision;
@@ -245,7 +245,7 @@ namespace XNA_GameEngine.Physics.Colliders
             if (p == 1)
             {
                 Vector2 location = collisionPoints[0];
-                Matrix rotation = Matrix.CreateRotationZ((float)GetParent().GetParent().GetRotation());
+                Matrix rotation = Matrix.CreateRotationZ((float)GetParent().GetRotation());
                 Vector2 axisOfCollision = Vector2.Transform(m_sideNormals[collidingEdge], rotation);
 
                 Vector2 pointA = other.TransformToWorld(other.GetLocalA());
@@ -335,18 +335,22 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public override BoundingBox2D GetBoundingBox()
         {
-            Vector2 vertex = base.TransformToWorld(m_vertices[0]);
-            Vector2 topLeft = vertex;
-            Vector2 bottomRight = vertex;
-
-            for (int i = 1; i < 4; i++)
+            if (m_boundingBox == null)
             {
-                vertex = base.TransformToWorld(m_vertices[i]);
-                topLeft = Vector2.Min(topLeft, vertex);
-                bottomRight = Vector2.Max(bottomRight, vertex);
+                Vector2 vertex = base.TransformToWorld(m_vertices[0]);
+                Vector2 topLeft = vertex;
+                Vector2 bottomRight = vertex;
+
+                for (int i = 1; i < 4; i++)
+                {
+                    vertex = base.TransformToWorld(m_vertices[i]);
+                    topLeft = Vector2.Min(topLeft, vertex);
+                    bottomRight = Vector2.Max(bottomRight, vertex);
+                }
+
+                m_boundingBox = new BoundingBox2D(topLeft, bottomRight);
             }
-            
-            return new BoundingBox2D(topLeft, bottomRight);
+            return m_boundingBox;
         }
     }
 }

@@ -92,12 +92,16 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public override BoundingBox2D GetBoundingBox()
         {
-            Vector2 vertexA = base.TransformToWorld(m_vRelativePointA);
-            Vector2 vertexB = base.TransformToWorld(m_vRelativePointB);
-            Vector2 topLeft = Vector2.Min(vertexA, vertexB);
-            Vector2 bottomRight = Vector2.Max(vertexA, vertexB);
+            if (m_boundingBox == null)
+            {
+                Vector2 vertexA = base.TransformToWorld(m_vRelativePointA);
+                Vector2 vertexB = base.TransformToWorld(m_vRelativePointB);
+                Vector2 topLeft = Vector2.Min(vertexA, vertexB);
+                Vector2 bottomRight = Vector2.Max(vertexA, vertexB);
 
-            return new BoundingBox2D(topLeft, bottomRight);
+                m_boundingBox = new BoundingBox2D(topLeft, bottomRight);
+            }
+            return m_boundingBox;
         }
     }
 }

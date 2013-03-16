@@ -54,7 +54,6 @@ namespace XNA_GameEngine.Gameplay
             }
         }
 
-
         public Vector2 GetPosition()
         {
             return m_vPosition;

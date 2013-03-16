@@ -23,6 +23,16 @@ namespace XNA_GameEngine.Physics
             return new BoundingBox2D(Vector2.Min(m_vTopLeft, other.m_vTopLeft), Vector2.Max(m_vBottomRight, other.m_vBottomRight));
         }
 
+        public Vector2 GetTopLeft()
+        {
+            return m_vTopLeft;
+        }
+
+        public Vector2 GetBottomRight()
+        {
+            return m_vBottomRight;
+        }
+
         public Boolean Overlap(BoundingBox2D other)
         {
             if (m_vTopLeft.X > other.m_vBottomRight.X ||
@@ -33,6 +43,18 @@ namespace XNA_GameEngine.Physics
                 return false;
             }
             return true;
+        }
+
+        public Boolean EntirelyContains(BoundingBox2D other)
+        {
+            if (m_vTopLeft.X <= other.m_vTopLeft.X && 
+                m_vTopLeft.Y <= other.m_vTopLeft.Y && 
+                m_vBottomRight.X >= other.m_vBottomRight.X &&
+                m_vBottomRight.Y >= other.m_vBottomRight.Y)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override string ToString()

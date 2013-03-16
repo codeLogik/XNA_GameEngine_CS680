@@ -15,11 +15,12 @@ namespace XNA_GameEngine.Physics.Colliders
         public CircleCollider(float radius)
         {
             m_fRadius = radius;
+            m_boundingBox = null;
         }
 
         public Vector2 GetOrigin()
         {
-            return GetParent().GetParent().GetPosition();
+            return GetParent().GetPosition();
         }
 
         public float GetRadius()
@@ -159,10 +160,14 @@ namespace XNA_GameEngine.Physics.Colliders
 
         public override BoundingBox2D GetBoundingBox()
         {
-            Vector2 origin = GetParent().GetParent().GetPosition();
-            Vector2 topLeft = new Vector2(origin.X - m_fRadius, origin.Y - m_fRadius);
-            Vector2 bottomRight = new Vector2(origin.X + m_fRadius, origin.Y + m_fRadius);
-            return new BoundingBox2D(topLeft, bottomRight);
+            if (m_boundingBox == null)
+            {
+                Vector2 origin = GetParent().GetPosition();
+                Vector2 topLeft = new Vector2(origin.X - m_fRadius, origin.Y - m_fRadius);
+                Vector2 bottomRight = new Vector2(origin.X + m_fRadius, origin.Y + m_fRadius);
+                m_boundingBox = new BoundingBox2D(topLeft, bottomRight);
+            }
+            return m_boundingBox;
         }
     }
 }
