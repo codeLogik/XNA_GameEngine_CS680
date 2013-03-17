@@ -22,18 +22,13 @@ namespace XNA_GameEngine.Network
         public NetworkThread(int listenerPort)
         {
             __senderSocket = new UdpClient();
-
-            // TODO @tom: Remove after setting up working on different machines.
-            //if (!CoreMain.isServer)
-            //{
-                __listenerSocket = new UdpClient(listenerPort);
-            //}
+            __listenerSocket = new UdpClient(listenerPort);
+            
         }
 
         public virtual void InitializeThread()
         {
-            // Start the uplink and downlink threads.
-            //m_SenderThread = new Thread(new ThreadStart(RunSenderThread));
+            // Start the listener thread.
             m_ListenerThread = new Thread(new ThreadStart(RunListenerThread));
 
             // Start the threads.

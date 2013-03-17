@@ -96,8 +96,7 @@ namespace XNA_GameEngine.Network
                 networkServer.GetReceivedGOStates(ref netGOStates);
 
 
-                //InputState[] inputStates = new InputState[CoreMain.MAX_PLAYERS];
-                // TODO @tom: Should this check have to be here????
+                //InputState[] inputStates = new InputState[CoreMain.MAX_PLAYERS];s
                 if (netGOStates != null)
                 {
                     // Build the player array of network inputs.
@@ -146,7 +145,6 @@ namespace XNA_GameEngine.Network
         {
             if (Network.NetworkParams.isServer)
             {
-                // TODO @tom:  Handle sending out
                 // Get the input states from the server thread and add into array of input states.
                 System.Diagnostics.Debug.Assert(networkThread is NetworkServer, "Server expects to have a network server thread!");
                 NetworkServer networkServer = (NetworkServer)networkThread;
@@ -167,7 +165,6 @@ namespace XNA_GameEngine.Network
             }
             else if (!Network.NetworkParams.isObserver)
             {
-                // TODO @tom: Handle sending local player state to the server.
                 GameObject playerGO = GameplayWorld.GetInstance().GetPlayerGameObjectOrNULL(CoreMain.s_localPlayer);
                 NetworkObject netObj = (NetworkObject)playerGO.GetComponentByTypeOrNULL(ICoreComponent.ComponentType.COMPONENT_Networking);
                 NetGOState netGOstate = netObj.GetCurrentNetState();

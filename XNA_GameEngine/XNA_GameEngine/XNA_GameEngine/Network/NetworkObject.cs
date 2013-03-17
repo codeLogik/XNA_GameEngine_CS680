@@ -27,7 +27,6 @@ namespace XNA_GameEngine.Network
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            // TODO @tom:  Handle logic here for updating the net state of the game object.  Do not
             // update position if we are the server as we have authority.
             m_netState.m_goRef = m_ownerGO.GetRef();
             Physics.PhysicsObject physObj = (Physics.PhysicsObject)m_ownerGO.GetComponentByTypeOrNULL(ComponentType.COMPONENT_Physics);
@@ -65,7 +64,6 @@ namespace XNA_GameEngine.Network
                 m_ownerGO.SetPosition(netGOstate.m_velocity.GetVector2());
             }*/
             
-            // TODO @tom:  Add support for doing the same kind of interpolation as above for rotation and angular velocity.
             m_ownerGO.SetRotation(netGOstate.m_rotation);
             physObj.SetAngularVelocity(netGOstate.m_angularVelocity);
 

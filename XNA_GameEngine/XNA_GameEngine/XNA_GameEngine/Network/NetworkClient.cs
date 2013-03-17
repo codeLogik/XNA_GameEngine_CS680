@@ -70,6 +70,7 @@ namespace XNA_GameEngine.Network
             }
         }
 
+        // Deprecated.  Sending is no longer done asynchronously
         public override void RunSenderThread()
         {
             // TODO @tom: This needs to be implemented for sending the state up to the server.

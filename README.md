@@ -63,3 +63,35 @@ If an object belongs in two child regions, then it is left in the parent to redu
 The second level of collision detection is the axis aligned bounding box. Each collider has one and most objects utilize it. Circle on circle collisions do not use the axis aligned bounding box since these collisions are relatively cheap.
 
 The third and final level of collision detection is precise and is very expensive for complex objects. The most complex object in this engine is the rectangle and as demo 7 has shown performing just level 2 and 3 of collision detection is not enough for heavily populated scenes.
+
+= Networking Module = 
+The central component to the networking system is the NetworkManager singleton.  Here is where the main game loop will call Update at the beginning of the simulation tick for the main loop and then 
+Post Update at the end of the game loop.  It is also in the network manager where the packets are sent synchronously and collected in a thread safe chared container from the the listener thread.
+
+The low level portion of the network system is found in the NetworkThread base class that contains the actual socket code and the abstract interface that the server and client threads will inherit 
+and override from.  This allows for a single place for all of the low level soket programming to be localized and shared between the client and server implementations of the network thread.  UDP sockets
+are used to send datagrams that contain the network state for the client and server.  UDP was choosen for its ability to outperform TCP when bottlenecks develop along the network route, as TCP cannot
+reroute the connection once it is made based on heavy network traffic.  UDP can handle this as it can be rerouted at will since there is no underlying direct connection between the server and the
+client.  This does mean that the protocol is less reliable, but a reliability layer can be developed on top.  We currently do not have this reliability layer, as time did not permit writing one.
+
+The server thread is spawned by the network manager when the game instance is configured to run as a server, and provides the logic for handling sending full network game state synchronously, and 
+a listener thread that is spawned to listen on a port and collect network state from the clients asynchronously.  These states are dumped into a shared linked list that is locked through a critical 
+section barrier to prevent race conditions corrupting the list.
+
+When running as a network, the network manager will during the Update portion, collect the game states for the various network player objects and update the state for those objects in the server.
+The rest of the engine will then take turns applying physics, resolving collisions, and rendering the objects.  After this is complete, the server then queues up all of the dynamic objects in the 
+world and sends their game state as a single networked game state to all registered clients and observers.
+
+The client thread is spawned by the network manager when the game instance is configured to run as a client or observer, and provides the logic for handling sending the local players network state
+up to the server to be processed and simulated, as well as receiving updates from the server and applyiong them to the local state.  The client first processes and updates that have been received
+by the client listener thread in a manner like the thread safe shared container for the server. The client then simulates it's own version of the game so as to collect input from the user, apply it 
+to the local object, and simulate the physics for local play.  At the end of the game simulation, the client sends its state up to the server for that frame of simulation.
+
+The network system is designed to handle up to four networked players and an unlimited number of observers.  The multithreaded system is designed to produce optimal performance for network packets by
+using specialized network state objects that limited the memory footprint to the absolute minimum needed.  This allows the packets to be small in size and to handle large amounts of network objects 
+without stressing the UDP protocol beyond what it is capable of.
+maintain reasonable local gameplay during the periods between server updates.  
+
+
+
+
